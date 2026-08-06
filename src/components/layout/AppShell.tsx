@@ -1,5 +1,7 @@
+import type { ReactNode } from "react";
+
 type AppShellProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 function AppShell({ children }: AppShellProps) {
@@ -7,7 +9,7 @@ function AppShell({ children }: AppShellProps) {
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "#FAFAFA",
+        backgroundColor: "#fafafa",
         color: "#111827",
       }}
     >
