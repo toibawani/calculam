@@ -1,5 +1,6 @@
 import WorkspaceHeader from "../components/workspace/WorkspaceHeader";
 import CalculatorGrid from "../components/workspace/CalculatorGrid";
+import CommandCenter from "../features/command/CommandCenter";
 
 function Workspace() {
   return (
@@ -18,6 +19,8 @@ function Workspace() {
         }}
       >
         <WorkspaceHeader />
+
+        <CommandCenter />
 
         <div style={{ marginTop: "56px" }}>
           <CalculatorGrid />
