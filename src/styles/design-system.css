@@ -1,0 +1,221 @@
+:root {
+  --calc-bg: #f7f8fb;
+  --calc-surface: rgba(255, 255, 255, 0.86);
+  --calc-surface-solid: #ffffff;
+
+  --calc-text: #101828;
+  --calc-text-secondary: #667085;
+  --calc-text-muted: #98a2b3;
+
+  --calc-border: #e4e7ec;
+  --calc-border-soft: #eef0f4;
+
+  --calc-primary: #5146e5;
+  --calc-primary-dark: #4338ca;
+  --calc-primary-soft: #eeedff;
+
+  --calc-success: #039855;
+  --calc-danger: #d92d20;
+
+  --calc-radius-sm: 10px;
+  --calc-radius-md: 16px;
+  --calc-radius-lg: 24px;
+  --calc-radius-xl: 32px;
+
+  --calc-shadow-sm:
+    0 1px 2px rgba(16, 24, 40, 0.04);
+
+  --calc-shadow-md:
+    0 10px 30px rgba(16, 24, 40, 0.06);
+
+  --calc-shadow-lg:
+    0 24px 70px rgba(16, 24, 40, 0.08);
+
+  --calc-transition:
+    180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+
+  background:
+    radial-gradient(
+      circle at 50% -20%,
+      rgba(81, 70, 229, 0.07),
+      transparent 38%
+    ),
+    var(--calc-bg);
+
+  color: var(--calc-text);
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(81, 70, 229, 0.16);
+}
+
+.calc-page {
+  min-height: 100vh;
+}
+
+.calc-container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.calc-glass {
+  background: var(--calc-surface);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--calc-shadow-lg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.calc-card {
+  background: var(--calc-surface-solid);
+  border: 1px solid var(--calc-border);
+  border-radius: var(--calc-radius-lg);
+  box-shadow: var(--calc-shadow-md);
+}
+
+.calc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  color: var(--calc-primary);
+
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.calc-muted {
+  color: var(--calc-text-secondary);
+}
+
+.calc-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 44px;
+  padding: 0 18px;
+
+  border: 1px solid transparent;
+  border-radius: 13px;
+
+  font-weight: 650;
+  cursor: pointer;
+
+  transition:
+    transform var(--calc-transition),
+    box-shadow var(--calc-transition),
+    background var(--calc-transition),
+    border-color var(--calc-transition);
+}
+
+.calc-button:hover {
+  transform: translateY(-1px);
+}
+
+.calc-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.calc-button-primary {
+  color: white;
+  background: var(--calc-primary);
+  box-shadow:
+    0 8px 18px rgba(81, 70, 229, 0.22);
+}
+
+.calc-button-primary:hover {
+  background: var(--calc-primary-dark);
+  box-shadow:
+    0 12px 25px rgba(81, 70, 229, 0.28);
+}
+
+.calc-button-secondary {
+  color: var(--calc-text);
+  background: white;
+  border-color: var(--calc-border);
+}
+
+.calc-button-secondary:hover {
+  border-color: #cfd4dc;
+  box-shadow: var(--calc-shadow-sm);
+}
+
+.calc-input {
+  width: 100%;
+  min-height: 54px;
+
+  padding: 0 16px;
+
+  color: var(--calc-text);
+  background: white;
+
+  border: 1px solid var(--calc-border);
+  border-radius: 14px;
+
+  outline: none;
+
+  transition:
+    border-color var(--calc-transition),
+    box-shadow var(--calc-transition);
+}
+
+.calc-input:focus {
+  border-color: rgba(81, 70, 229, 0.6);
+  box-shadow:
+    0 0 0 4px rgba(81, 70, 229, 0.09);
+}
+
+@media (max-width: 700px) {
+  .calc-container {
+    width: min(100% - 24px, 560px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
