@@ -1,15 +1,28 @@
+import WorkspaceHeader from "../components/workspace/WorkspaceHeader";
+import CalculatorGrid from "../components/workspace/CalculatorGrid";
+
 function Workspace() {
   return (
     <main
       style={{
-        minHeight: "100vh",
-        padding: "80px",
-        background: "#FAFAFA",
+        minHeight: "calc(100vh - 72px)",
+        padding: "72px 24px 100px",
+        background: "#F8FAFC",
       }}
     >
-      <h1>Workspace</h1>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1200px",
+          margin: "0 auto",
+        }}
+      >
+        <WorkspaceHeader />
 
-      <p>Select a calculator to begin.</p>
+        <div style={{ marginTop: "56px" }}>
+          <CalculatorGrid />
+        </div>
+      </div>
     </main>
   );
 }
