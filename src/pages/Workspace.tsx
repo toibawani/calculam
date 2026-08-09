@@ -1,239 +1,112 @@
-import {
-  Calculator,
-  Clock3,
-  Command,
-  History,
-  Settings2,
-  Sparkles,
-} from "lucide-react";
+import { Calculator, Clock3, Command, History, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import BasicCalculator from "../features/calculator/BasicCalculator";
 
 export default function Workspace() {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "#f8f9fc",
-        color: "#111827",
-        fontFamily:
-          'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-      }}
-    >
-      <header
-        style={{
-          height: 72,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 32px",
-          borderBottom: "1px solid #e5e7eb",
-          background: "rgba(255,255,255,.88)",
-          backdropFilter: "blur(18px)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            fontWeight: 750,
-          }}
-        >
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              display: "grid",
-              placeItems: "center",
-              borderRadius: 10,
-              color: "white",
-              background: "#4f46e5",
-            }}
-          >
-            <Calculator size={19} />
-          </div>
+    <div className="workspace-page">
+      <header className="workspace-header">
+        <div className="workspace-brand">
+          <Link to="/" className="workspace-logo">
+            <span className="workspace-logo-mark">
+              <Sparkles size={17} />
+            </span>
+            Calculam
+          </Link>
 
-          Calculam
+          <span className="workspace-divider" />
+
+          <span className="workspace-label">Workspace</span>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <button
-            title="Command Center"
-            style={{
-              width: 38,
-              height: 38,
-              display: "grid",
-              placeItems: "center",
-              border: "1px solid #e5e7eb",
-              borderRadius: 10,
-              background: "white",
-              cursor: "pointer",
-            }}
-          >
-            <Command size={17} />
+        <div className="workspace-actions">
+          <button className="workspace-action" type="button">
+            <History size={17} />
+            <span>History</span>
           </button>
 
-          <button
-            title="Settings"
-            style={{
-              width: 38,
-              height: 38,
-              display: "grid",
-              placeItems: "center",
-              border: "1px solid #e5e7eb",
-              borderRadius: 10,
-              background: "white",
-              cursor: "pointer",
-            }}
-          >
-            <Settings2 size={17} />
+          <button className="workspace-action" type="button">
+            <Command size={17} />
+            <span>Command</span>
           </button>
         </div>
       </header>
 
-      <div
-        style={{
-          maxWidth: 1180,
-          margin: "0 auto",
-          padding: "48px 24px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            color: "#6366f1",
-            fontSize: 13,
-            fontWeight: 650,
-          }}
-        >
-          <Sparkles size={16} />
-          Calculation Workspace
-        </div>
+      <main className="workspace-main">
+        <section className="workspace-intro">
+          <div>
+            <div className="workspace-eyebrow">
+              <Calculator size={15} />
+              Calculation workspace
+            </div>
 
-        <h1
-          style={{
-            margin: "10px 0 8px",
-            fontSize: 38,
-            letterSpacing: "-.045em",
-          }}
-        >
-          Your calculations,
-          <br />
-          all in one place.
-        </h1>
+            <h1>Calculate without the clutter.</h1>
 
-        <p
-          style={{
-            margin: 0,
-            maxWidth: 600,
-            color: "#64748b",
-            lineHeight: 1.6,
-          }}
-        >
-          Calculate, convert and revisit your work without jumping
-          between different tools.
-        </p>
+            <p>
+              A focused space for everyday calculations, conversions and
+              everything in between.
+            </p>
+          </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: 16,
-            marginTop: 42,
-          }}
-        >
-          <WorkspaceCard
-            icon={<Calculator size={21} />}
-            title="Calculator"
-            description="Fast everyday calculations."
-            accent="#4f46e5"
-          />
+          <div className="workspace-status">
+            <span className="status-dot" />
+            Ready
+            <span className="status-time">
+              <Clock3 size={14} />
+              Live
+            </span>
+          </div>
+        </section>
 
-          <WorkspaceCard
-            icon={<Clock3 size={21} />}
-            title="Quick calculations"
-            description="Get answers without losing context."
-            accent="#0891b2"
-          />
+        <section className="calculator-layout">
+          <div className="calculator-main-card">
+            <BasicCalculator />
+          </div>
 
-          <WorkspaceCard
-            icon={<History size={21} />}
-            title="History"
-            description="Keep track of previous calculations."
-            accent="#7c3aed"
-          />
-        </div>
-      </div>
-    </main>
-  );
-}
+          <aside className="workspace-side-panel">
+            <div className="side-panel-heading">
+              <div>
+                <span className="side-panel-kicker">Quick access</span>
+                <h2>Your tools</h2>
+              </div>
 
-function WorkspaceCard({
-  icon,
-  title,
-  description,
-  accent,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  accent: string;
-}) {
-  return (
-    <button
-      style={{
-        textAlign: "left",
-        padding: 24,
-        minHeight: 180,
-        border: "1px solid #e5e7eb",
-        borderRadius: 18,
-        background: "white",
-        cursor: "pointer",
-        boxShadow: "0 8px 25px rgba(15,23,42,.04)",
-      }}
-    >
-      <div
-        style={{
-          width: 42,
-          height: 42,
-          display: "grid",
-          placeItems: "center",
-          marginBottom: 28,
-          color: accent,
-          background: `${accent}12`,
-          borderRadius: 12,
-        }}
-      >
-        {icon}
-      </div>
+              <Sparkles size={18} />
+            </div>
 
-      <strong
-        style={{
-          display: "block",
-          fontSize: 17,
-          marginBottom: 7,
-        }}
-      >
-        {title}
-      </strong>
+            <button className="tool-card" type="button">
+              <span className="tool-icon">+</span>
+              <span>
+                <strong>New calculation</strong>
+                <small>Start from a clean slate</small>
+              </span>
+            </button>
 
-      <span
-        style={{
-          color: "#94a3b8",
-          fontSize: 13,
-          lineHeight: 1.5,
-        }}
-      >
-        {description}
-      </span>
-    </button>
+            <button className="tool-card" type="button">
+              <span className="tool-icon">↔</span>
+              <span>
+                <strong>Unit converter</strong>
+                <small>Length, weight, temperature & more</small>
+              </span>
+            </button>
+
+            <button className="tool-card" type="button">
+              <span className="tool-icon">⌁</span>
+              <span>
+                <strong>Calculation history</strong>
+                <small>Your recent results</small>
+              </span>
+            </button>
+
+            <div className="keyboard-hint">
+              <span>Tip</span>
+              <p>
+                You can use your keyboard to enter numbers and operators
+                directly.
+              </p>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
   );
 }

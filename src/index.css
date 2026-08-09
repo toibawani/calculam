@@ -76,11 +76,9 @@ select {
 .home-nav {
   position: relative;
   z-index: 10;
-
   width: min(1180px, calc(100% - 40px));
   height: 76px;
   margin: 0 auto;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -90,7 +88,6 @@ select {
   display: inline-flex;
   align-items: center;
   gap: 11px;
-
   font-size: 18px;
   font-weight: 750;
   letter-spacing: -0.025em;
@@ -99,21 +96,12 @@ select {
 .brand-mark {
   width: 38px;
   height: 38px;
-
   display: grid;
   place-items: center;
-
   color: white;
   border-radius: 11px;
-
-  background: linear-gradient(
-    135deg,
-    #4f46e5,
-    #6366f1
-  );
-
-  box-shadow:
-    0 8px 22px rgba(79, 70, 229, 0.22);
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  box-shadow: 0 8px 22px rgba(79, 70, 229, 0.22);
 }
 
 .nav-actions {
@@ -137,20 +125,13 @@ select {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-
   padding: 10px 16px;
-
   color: white;
   background: #111827;
-
   border-radius: 11px;
-
   font-size: 13px;
   font-weight: 650;
-
-  box-shadow:
-    0 8px 20px rgba(15, 23, 42, 0.12);
-
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
   transition:
     transform 160ms ease,
     box-shadow 160ms ease;
@@ -158,19 +139,15 @@ select {
 
 .nav-cta:hover {
   transform: translateY(-1px);
-  box-shadow:
-    0 12px 25px rgba(15, 23, 42, 0.17);
+  box-shadow: 0 12px 25px rgba(15, 23, 42, 0.17);
 }
 
 .hero-section {
   position: relative;
   z-index: 2;
-
   width: min(1100px, calc(100% - 40px));
   margin: 0 auto;
-
   padding: 88px 0 100px;
-
   text-align: center;
 }
 
@@ -178,28 +155,19 @@ select {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-
   padding: 8px 13px;
-
   border: 1px solid rgba(99, 102, 241, 0.15);
   border-radius: 999px;
-
   background: rgba(255, 255, 255, 0.72);
-
   color: #6366f1;
-
   font-size: 12px;
   font-weight: 650;
-
-  box-shadow:
-    0 5px 20px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
 }
 
 .hero-section h1 {
   margin: 28px auto 0;
-
   max-width: 850px;
-
   font-size: clamp(48px, 7vw, 84px);
   line-height: 0.98;
   letter-spacing: -0.065em;
@@ -214,9 +182,7 @@ select {
 .hero-description {
   max-width: 610px;
   margin: 28px auto 0;
-
   color: #64748b;
-
   font-size: 17px;
   line-height: 1.7;
   letter-spacing: -0.01em;
@@ -227,7 +193,6 @@ select {
   align-items: center;
   justify-content: center;
   gap: 12px;
-
   margin-top: 34px;
 }
 
@@ -237,15 +202,11 @@ select {
   align-items: center;
   justify-content: center;
   gap: 9px;
-
   min-height: 48px;
   padding: 0 20px;
-
   border-radius: 13px;
-
   font-size: 14px;
   font-weight: 650;
-
   transition:
     transform 160ms ease,
     box-shadow 160ms ease,
@@ -255,15 +216,12 @@ select {
 .primary-action {
   color: white;
   background: #4f46e5;
-
-  box-shadow:
-    0 10px 26px rgba(79, 70, 229, 0.22);
+  box-shadow: 0 10px 26px rgba(79, 70, 229, 0.22);
 }
 
 .primary-action:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 15px 32px rgba(79, 70, 229, 0.28);
+  box-shadow: 0 15px 32px rgba(79, 70, 229, 0.28);
 }
 
 .secondary-action {
@@ -284,14 +242,10 @@ select {
 
 .preview-window {
   overflow: hidden;
-
   text-align: left;
-
   border: 1px solid rgba(148, 163, 184, 0.28);
   border-radius: 20px;
-
   background: white;
-
   box-shadow:
     0 40px 100px rgba(15, 23, 42, 0.12),
     0 10px 30px rgba(15, 23, 42, 0.05);
@@ -299,15 +253,11 @@ select {
 
 .preview-topbar {
   height: 48px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 0 17px;
-
   border-bottom: 1px solid #eef2f7;
-
   background: #fbfcfe;
 }
 
@@ -342,9 +292,7 @@ select {
 
 .preview-sidebar {
   width: 190px;
-
   padding: 22px 15px;
-
   border-right: 1px solid #eef2f7;
   background: #fafbfc;
 }
@@ -352,12 +300,9 @@ select {
 .preview-sidebar-logo {
   width: 32px;
   height: 32px;
-
   display: grid;
   place-items: center;
-
   margin-bottom: 24px;
-
   color: #6366f1;
   background: #eef2ff;
   border-radius: 9px;
@@ -366,11 +311,8 @@ select {
 .preview-sidebar-item {
   padding: 10px 11px;
   margin-bottom: 4px;
-
   color: #94a3b8;
-
   border-radius: 8px;
-
   font-size: 11px;
   font-weight: 600;
 }
@@ -387,7 +329,6 @@ select {
 
 .preview-heading span {
   display: block;
-
   color: #94a3b8;
   font-size: 11px;
 }
@@ -395,9 +336,7 @@ select {
 .preview-heading strong {
   display: block;
   margin-top: 5px;
-
   color: #1e293b;
-
   font-size: 21px;
   letter-spacing: -0.03em;
 }
@@ -406,25 +345,19 @@ select {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
-
   margin-top: 30px;
 }
 
 .preview-card {
   padding: 22px;
-
   border: 1px solid #eef2f7;
   border-radius: 15px;
-
   background: #ffffff;
-
-  box-shadow:
-    0 5px 18px rgba(15, 23, 42, 0.035);
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.035);
 }
 
 .preview-card span {
   display: block;
-
   color: #94a3b8;
   font-size: 10px;
   font-weight: 600;
@@ -433,9 +366,7 @@ select {
 .preview-card strong {
   display: block;
   margin-top: 12px;
-
   color: #1e293b;
-
   font-size: 24px;
   letter-spacing: -0.04em;
 }
@@ -482,5 +413,105 @@ select {
 
   .preview-cards {
     grid-template-columns: 1fr;
+  }
+}
+/* =========================================
+   ADDITIONAL RESPONSIVE POLISH
+   ========================================= */
+
+@media (max-width: 900px) {
+  .home-nav {
+    width: min(100% - 32px, 1180px);
+  }
+
+  .hero-section {
+    width: min(100% - 32px, 1100px);
+  }
+
+  .preview-content {
+    min-height: 280px;
+  }
+
+  .preview-sidebar {
+    width: 160px;
+  }
+
+  .preview-main {
+    padding: 26px;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-glow-one {
+    width: 220px;
+    height: 220px;
+    left: -120px;
+  }
+
+  .home-glow-two {
+    width: 220px;
+    height: 220px;
+    right: -120px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+
+  .nav-actions {
+    gap: 10px;
+  }
+
+  .nav-cta {
+    padding: 9px 13px;
+  }
+
+  .hero-section {
+    padding: 55px 0 70px;
+  }
+
+  .hero-badge {
+    font-size: 11px;
+  }
+
+  .hero-section h1 {
+    margin-top: 22px;
+    font-size: clamp(40px, 13vw, 60px);
+  }
+
+  .hero-description {
+    margin-top: 22px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .hero-preview {
+    margin-top: 55px;
+  }
+
+  .preview-topbar {
+    height: 42px;
+    padding: 0 12px;
+  }
+
+  .preview-main {
+    padding: 18px;
+  }
+
+  .preview-heading strong {
+    font-size: 18px;
+  }
+
+  .preview-card {
+    padding: 18px;
+  }
+
+  .preview-card strong {
+    font-size: 21px;
   }
 }
