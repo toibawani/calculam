@@ -1,110 +1,179 @@
-import { Calculator, Clock3, Command, History, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  Calculator,
+  Delete,
+  History,
+  RotateCcw,
+} from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import BasicCalculator from "../features/calculator/BasicCalculator";
+
+const buttons = [
+  ["C", "⌫", "%", "÷"],
+  ["7", "8", "9", "×"],
+  ["4", "5", "6", "−"],
+  ["1", "2", "3", "+"],
+  ["0", ".", "=", "↵"],
+];
 
 export default function Workspace() {
+  const [display, setDisplay] = useState("0");
+  const [expression, setExpression] = useState("");
+
+  const handlePress = (value: string) => {
+    if (value === "C") {
+      setDisplay("0");
+      setExpression("");
+      return;
+    }
+
+    if (value === "⌫") {
+      setDisplay((current) =>
+        current.length > 1 ? current.slice(0, -1) : "0",
+      );
+      return;
+    }
+
+    if (value === "=") {
+      try {
+        const safeExpression = expression
+          .replace(/×/g, "*")
+          .replace(/÷/g, "/")
+          .replace(/−/g, "-");
+
+        // Basic arithmetic evaluation for the initial workspace.
+        const result = Function(
+          `"use strict"; return (${safeExpression || display})`,
+        )();
+
+        setDisplay(String(result));
+        setExpression(String(result));
+      } catch {
+        setDisplay("Error");
+      }
+
+      return;
+    }
+
+    if (["+", "−", "×", "÷", "%"].includes(value)) {
+      setExpression((current) =>
+        `${current || display}${value}`,
+      );
+      setDisplay("0");
+      return;
+    }
+
+    if (value === ".") {
+      if (!display.includes(".")) {
+        setDisplay((current) => `${current}.`);
+      }
+      return;
+    }
+
+    setDisplay((current) =>
+      current === "0" ? value : `${current}${value}`,
+    );
+  };
+
   return (
     <div className="workspace-page">
       <header className="workspace-header">
         <div className="workspace-brand">
-          <Link to="/" className="workspace-logo">
-            <span className="workspace-logo-mark">
-              <Sparkles size={17} />
-            </span>
-            Calculam
+          <Link to="/" className="back-button">
+            <ArrowLeft size={18} />
           </Link>
 
-          <span className="workspace-divider" />
+          <div className="brand-icon">
+            <Calculator size={20} />
+          </div>
 
-          <span className="workspace-label">Workspace</span>
+          <div>
+            <strong>Calculam</strong>
+            <span>Workspace</span>
+          </div>
         </div>
 
         <div className="workspace-actions">
-          <button className="workspace-action" type="button">
-            <History size={17} />
-            <span>History</span>
+          <button className="icon-button" title="History">
+            <History size={19} />
           </button>
 
-          <button className="workspace-action" type="button">
-            <Command size={17} />
-            <span>Command</span>
+          <button
+            className="icon-button"
+            title="Reset"
+            onClick={() => {
+              setDisplay("0");
+              setExpression("");
+            }}
+          >
+            <RotateCcw size={18} />
           </button>
         </div>
       </header>
 
       <main className="workspace-main">
         <section className="workspace-intro">
-          <div>
-            <div className="workspace-eyebrow">
-              <Calculator size={15} />
-              Calculation workspace
-            </div>
+          <span className="eyebrow">CALCULATOR</span>
 
-            <h1>Calculate without the clutter.</h1>
+          <h1>
+            Your calculation
+            <br />
+            <span>workspace.</span>
+          </h1>
 
-            <p>
-              A focused space for everyday calculations, conversions and
-              everything in between.
-            </p>
-          </div>
-
-          <div className="workspace-status">
-            <span className="status-dot" />
-            Ready
-            <span className="status-time">
-              <Clock3 size={14} />
-              Live
-            </span>
-          </div>
+          <p>
+            A clean, focused space for everyday calculations,
+            conversions, and more.
+          </p>
         </section>
 
-        <section className="calculator-layout">
-          <div className="calculator-main-card">
-            <BasicCalculator />
+        <section className="calculator-shell">
+          <div className="calculator-topbar">
+            <div>
+              <span className="calculator-label">Basic Calculator</span>
+              <span className="calculator-status">Ready</span>
+            </div>
+
+            <button
+              className="clear-button"
+              onClick={() => {
+                setDisplay("0");
+                setExpression("");
+              }}
+            >
+              Clear
+              <Delete size={16} />
+            </button>
           </div>
 
-          <aside className="workspace-side-panel">
-            <div className="side-panel-heading">
-              <div>
-                <span className="side-panel-kicker">Quick access</span>
-                <h2>Your tools</h2>
-              </div>
+          <div className="calculator-display">
+            <span className="expression">
+              {expression || "Ready for your calculation"}
+            </span>
 
-              <Sparkles size={18} />
-            </div>
+            <strong>{display}</strong>
+          </div>
 
-            <button className="tool-card" type="button">
-              <span className="tool-icon">+</span>
-              <span>
-                <strong>New calculation</strong>
-                <small>Start from a clean slate</small>
-              </span>
-            </button>
-
-            <button className="tool-card" type="button">
-              <span className="tool-icon">↔</span>
-              <span>
-                <strong>Unit converter</strong>
-                <small>Length, weight, temperature & more</small>
-              </span>
-            </button>
-
-            <button className="tool-card" type="button">
-              <span className="tool-icon">⌁</span>
-              <span>
-                <strong>Calculation history</strong>
-                <small>Your recent results</small>
-              </span>
-            </button>
-
-            <div className="keyboard-hint">
-              <span>Tip</span>
-              <p>
-                You can use your keyboard to enter numbers and operators
-                directly.
-              </p>
-            </div>
-          </aside>
+          <div className="calculator-keypad">
+            {buttons.flat().map((button) => (
+              <button
+                key={button}
+                className={[
+                  "calculator-key",
+                  button === "=" ? "equals" : "",
+                  ["÷", "×", "−", "+"].includes(button)
+                    ? "operator"
+                    : "",
+                  ["C", "⌫", "%"].includes(button)
+                    ? "utility"
+                    : "",
+                ].join(" ")}
+                onClick={() => handlePress(button)}
+              >
+                {button}
+              </button>
+            ))}
+          </div>
         </section>
       </main>
     </div>
