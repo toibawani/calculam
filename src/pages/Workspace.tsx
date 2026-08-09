@@ -1,33 +1,86 @@
-import WorkspaceHeader from "../components/workspace/WorkspaceHeader";
-import CalculatorGrid from "../components/workspace/CalculatorGrid";
-import CommandCenter from "../features/command/CommandCenter";
+import {
+  Calculator,
+  Command,
+  History,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
 
-function Workspace() {
+const tools = [
+  {
+    icon: Calculator,
+    title: "Calculator",
+    description: "Fast everyday calculations with a clean interface.",
+  },
+  {
+    icon: Sparkles,
+    title: "Scientific",
+    description: "Advanced functions for mathematics and engineering.",
+  },
+  {
+    icon: ArrowRight,
+    title: "Converter",
+    description: "Convert units, temperatures, time, weight and more.",
+  },
+  {
+    icon: History,
+    title: "History",
+    description: "Keep track of your previous calculations.",
+  },
+];
+
+export default function Workspace() {
   return (
-    <main
-      style={{
-        minHeight: "calc(100vh - 72px)",
-        padding: "72px 24px 100px",
-        background: "#F8FAFC",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}
-      >
-        <WorkspaceHeader />
+    <main className="workspace-page">
+      <section className="workspace-header">
+        <div>
+          <span className="workspace-eyebrow">
+            <Sparkles size={15} />
+            CALCULAM WORKSPACE
+          </span>
 
-        <CommandCenter />
+          <h1>
+            Your calculations,
+            <br />
+            <span>all in one place.</span>
+          </h1>
 
-        <div style={{ marginTop: "56px" }}>
-          <CalculatorGrid />
+          <p>
+            A focused calculation environment designed for speed,
+            clarity and everyday problem solving.
+          </p>
         </div>
-      </div>
+
+        <button className="command-button">
+          <Command size={17} />
+          Command Center
+          <kbd>⌘ K</kbd>
+        </button>
+      </section>
+
+      <section className="workspace-grid">
+        {tools.map((tool) => {
+          const Icon = tool.icon;
+
+          return (
+            <button className="workspace-card" key={tool.title}>
+              <div className="workspace-card-icon">
+                <Icon size={22} />
+              </div>
+
+              <div className="workspace-card-content">
+                <h2>{tool.title}</h2>
+                <p>{tool.description}</p>
+              </div>
+
+              <ArrowRight
+                className="workspace-card-arrow"
+                size={18}
+              />
+            </button>
+          );
+        })}
+      </section>
     </main>
   );
 }
-
-export default Workspace;
