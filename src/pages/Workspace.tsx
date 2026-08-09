@@ -1,86 +1,239 @@
 import {
   Calculator,
+  Clock3,
   Command,
   History,
+  Settings2,
   Sparkles,
-  ArrowRight,
 } from "lucide-react";
-
-const tools = [
-  {
-    icon: Calculator,
-    title: "Calculator",
-    description: "Fast everyday calculations with a clean interface.",
-  },
-  {
-    icon: Sparkles,
-    title: "Scientific",
-    description: "Advanced functions for mathematics and engineering.",
-  },
-  {
-    icon: ArrowRight,
-    title: "Converter",
-    description: "Convert units, temperatures, time, weight and more.",
-  },
-  {
-    icon: History,
-    title: "History",
-    description: "Keep track of your previous calculations.",
-  },
-];
 
 export default function Workspace() {
   return (
-    <main className="workspace-page">
-      <section className="workspace-header">
-        <div>
-          <span className="workspace-eyebrow">
-            <Sparkles size={15} />
-            CALCULAM WORKSPACE
-          </span>
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "#f8f9fc",
+        color: "#111827",
+        fontFamily:
+          'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      }}
+    >
+      <header
+        style={{
+          height: 72,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 32px",
+          borderBottom: "1px solid #e5e7eb",
+          background: "rgba(255,255,255,.88)",
+          backdropFilter: "blur(18px)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            fontWeight: 750,
+          }}
+        >
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              display: "grid",
+              placeItems: "center",
+              borderRadius: 10,
+              color: "white",
+              background: "#4f46e5",
+            }}
+          >
+            <Calculator size={19} />
+          </div>
 
-          <h1>
-            Your calculations,
-            <br />
-            <span>all in one place.</span>
-          </h1>
-
-          <p>
-            A focused calculation environment designed for speed,
-            clarity and everyday problem solving.
-          </p>
+          Calculam
         </div>
 
-        <button className="command-button">
-          <Command size={17} />
-          Command Center
-          <kbd>⌘ K</kbd>
-        </button>
-      </section>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <button
+            title="Command Center"
+            style={{
+              width: 38,
+              height: 38,
+              display: "grid",
+              placeItems: "center",
+              border: "1px solid #e5e7eb",
+              borderRadius: 10,
+              background: "white",
+              cursor: "pointer",
+            }}
+          >
+            <Command size={17} />
+          </button>
 
-      <section className="workspace-grid">
-        {tools.map((tool) => {
-          const Icon = tool.icon;
+          <button
+            title="Settings"
+            style={{
+              width: 38,
+              height: 38,
+              display: "grid",
+              placeItems: "center",
+              border: "1px solid #e5e7eb",
+              borderRadius: 10,
+              background: "white",
+              cursor: "pointer",
+            }}
+          >
+            <Settings2 size={17} />
+          </button>
+        </div>
+      </header>
 
-          return (
-            <button className="workspace-card" key={tool.title}>
-              <div className="workspace-card-icon">
-                <Icon size={22} />
-              </div>
+      <div
+        style={{
+          maxWidth: 1180,
+          margin: "0 auto",
+          padding: "48px 24px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            color: "#6366f1",
+            fontSize: 13,
+            fontWeight: 650,
+          }}
+        >
+          <Sparkles size={16} />
+          Calculation Workspace
+        </div>
 
-              <div className="workspace-card-content">
-                <h2>{tool.title}</h2>
-                <p>{tool.description}</p>
-              </div>
+        <h1
+          style={{
+            margin: "10px 0 8px",
+            fontSize: 38,
+            letterSpacing: "-.045em",
+          }}
+        >
+          Your calculations,
+          <br />
+          all in one place.
+        </h1>
 
-              <ArrowRight
-                className="workspace-card-arrow"
-                size={18}
-              />
-            </button>
-          );
-        })}
-      </section>
+        <p
+          style={{
+            margin: 0,
+            maxWidth: 600,
+            color: "#64748b",
+            lineHeight: 1.6,
+          }}
+        >
+          Calculate, convert and revisit your work without jumping
+          between different tools.
+        </p>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 16,
+            marginTop: 42,
+          }}
+        >
+          <WorkspaceCard
+            icon={<Calculator size={21} />}
+            title="Calculator"
+            description="Fast everyday calculations."
+            accent="#4f46e5"
+          />
+
+          <WorkspaceCard
+            icon={<Clock3 size={21} />}
+            title="Quick calculations"
+            description="Get answers without losing context."
+            accent="#0891b2"
+          />
+
+          <WorkspaceCard
+            icon={<History size={21} />}
+            title="History"
+            description="Keep track of previous calculations."
+            accent="#7c3aed"
+          />
+        </div>
+      </div>
     </main>
+  );
+}
+
+function WorkspaceCard({
+  icon,
+  title,
+  description,
+  accent,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  accent: string;
+}) {
+  return (
+    <button
+      style={{
+        textAlign: "left",
+        padding: 24,
+        minHeight: 180,
+        border: "1px solid #e5e7eb",
+        borderRadius: 18,
+        background: "white",
+        cursor: "pointer",
+        boxShadow: "0 8px 25px rgba(15,23,42,.04)",
+      }}
+    >
+      <div
+        style={{
+          width: 42,
+          height: 42,
+          display: "grid",
+          placeItems: "center",
+          marginBottom: 28,
+          color: accent,
+          background: `${accent}12`,
+          borderRadius: 12,
+        }}
+      >
+        {icon}
+      </div>
+
+      <strong
+        style={{
+          display: "block",
+          fontSize: 17,
+          marginBottom: 7,
+        }}
+      >
+        {title}
+      </strong>
+
+      <span
+        style={{
+          color: "#94a3b8",
+          fontSize: 13,
+          lineHeight: 1.5,
+        }}
+      >
+        {description}
+      </span>
+    </button>
   );
 }
