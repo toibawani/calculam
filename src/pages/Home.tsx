@@ -2,21 +2,43 @@ import {
   ArrowRight,
   Calculator,
   Command,
+  History,
   Sparkles,
+  ArrowDownUp,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+const features = [
+  {
+    icon: Calculator,
+    title: "Calculate",
+    description:
+      "Handle everyday calculations quickly with a focused, keyboard-friendly calculator.",
+  },
+  {
+    icon: ArrowDownUp,
+    title: "Convert",
+    description:
+      "Move between useful units without leaving your calculation workspace.",
+  },
+  {
+    icon: History,
+    title: "Remember",
+    description:
+      "Keep track of recent calculations so useful results are never lost.",
+  },
+];
+
 export default function Home() {
   return (
-    <main className="home-page">
-      {/* Navigation */}
+    <div className="home-page">
       <nav className="home-nav">
         <Link to="/" className="brand">
-          <div className="brand-mark">
-            <Calculator size={20} strokeWidth={2.4} />
-          </div>
+          <span className="brand-mark">
+            <Calculator size={19} strokeWidth={2.4} />
+          </span>
 
-          <span>Calculam</span>
+          <span className="brand-name">Calculam</span>
         </Link>
 
         <div className="nav-actions">
@@ -31,102 +53,163 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="hero-section">
-        <div className="hero-badge">
-          <Sparkles size={15} />
-          <span>A smarter way to calculate</span>
-        </div>
-
-        <h1>
-          Calculation,
-          <br />
-          <span>beautifully simplified.</span>
-        </h1>
-
-        <p className="hero-description">
-          Calculam is a modern calculation workspace designed for
-          everyday math, conversions, quick answers and everything
-          in between.
-        </p>
-
-        <div className="hero-actions">
-          <Link to="/workspace" className="primary-action">
-            Get Started
-            <ArrowRight size={18} />
-          </Link>
-
-          <Link to="/workspace" className="secondary-action">
-            <Command size={17} />
-            Explore Workspace
-          </Link>
-        </div>
-
-        {/* Workspace Preview */}
-        <div className="hero-preview">
-          <div className="preview-window">
-            <div className="preview-topbar">
-              <div className="window-dots">
-                <span />
-                <span />
-                <span />
-              </div>
-
-              <div className="preview-title">
-                Calculam Workspace
-              </div>
-
-              <div className="preview-status">
-                Ready
-              </div>
+      <main>
+        <section className="hero-section">
+          <div className="hero-copy">
+            <div className="hero-badge">
+              <Sparkles size={14} />
+              <span>Built for everyday calculations</span>
             </div>
 
-            <div className="preview-content">
-              {/* Preview Sidebar */}
-              <div className="preview-sidebar">
-                <div className="preview-sidebar-logo">
-                  <Calculator size={16} />
+            <h1>
+              Math should feel
+              <br />
+              <span>effortless.</span>
+            </h1>
+
+            <p className="hero-description">
+              Calculam brings calculations, conversions and useful results
+              together in one focused workspace.
+            </p>
+
+            <div className="hero-actions">
+              <Link to="/workspace" className="primary-action">
+                Get Started
+                <ArrowRight size={18} />
+              </Link>
+
+              <Link to="/workspace" className="secondary-action">
+                <Command size={16} />
+                Explore Workspace
+              </Link>
+            </div>
+          </div>
+
+          <div className="calculator-preview" aria-hidden="true">
+            <div className="preview-glow" />
+
+            <div className="preview-window">
+              <div className="preview-header">
+                <div className="window-controls">
+                  <span />
+                  <span />
+                  <span />
                 </div>
 
-                <div className="preview-sidebar-item active">
-                  Calculator
-                </div>
+                <span className="preview-label">Calculam</span>
 
-                <div className="preview-sidebar-item">
-                  Converter
-                </div>
-
-                <div className="preview-sidebar-item">
-                  History
-                </div>
+                <span className="preview-ready">
+                  <span />
+                  Ready
+                </span>
               </div>
 
-              {/* Preview Main */}
-              <div className="preview-main">
-                <div className="preview-heading">
-                  <span>Good to see you.</span>
-
-                  <strong>
-                    What are we calculating?
-                  </strong>
-                </div>
-
-                <div className="preview-cards">
-                  <div className="preview-card">
-                    <span>Basic Calculator</span>
-                    <strong>1,248.50</strong>
+              <div className="preview-body">
+                <div className="preview-sidebar">
+                  <div className="mini-logo">
+                    <Calculator size={15} />
                   </div>
 
-                  <div className="preview-card">
-                    <span>Quick Conversion</span>
-                    <strong>12.4 km</strong>
+                  <div className="mini-nav active">
+                    <Calculator size={14} />
+                    <span>Calculator</span>
+                  </div>
+
+                  <div className="mini-nav">
+                    <ArrowDownUp size={14} />
+                    <span>Converter</span>
+                  </div>
+
+                  <div className="mini-nav">
+                    <History size={14} />
+                    <span>History</span>
+                  </div>
+                </div>
+
+                <div className="preview-workspace">
+                  <div className="preview-workspace-heading">
+                    <span>Basic Calculator</span>
+                    <small>Ready for input</small>
+                  </div>
+
+                  <div className="preview-display">
+                    <span className="preview-expression">
+                      248 × 4 + 16
+                    </span>
+
+                    <strong>1,008</strong>
+                  </div>
+
+                  <div className="preview-keypad">
+                    {[
+                      "AC",
+                      "⌫",
+                      "%",
+                      "÷",
+                      "7",
+                      "8",
+                      "9",
+                      "×",
+                      "4",
+                      "5",
+                      "6",
+                      "−",
+                      "1",
+                      "2",
+                      "3",
+                      "+",
+                      "0",
+                      ".",
+                      "=",
+                    ].map((key) => (
+                      <span
+                        key={key}
+                        className={
+                          key === "="
+                            ? "preview-key equal"
+                            : key === "÷" ||
+                                key === "×" ||
+                                key === "−" ||
+                                key === "+"
+                              ? "preview-key operator"
+                              : "preview-key"
+                        }
+                      >
+                        {key}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+
+        <section className="feature-section">
+          <div className="section-heading">
+            <span>Everything in one place</span>
+            <h2>A workspace that stays out of your way.</h2>
+          </div>
+
+          <div className="feature-grid">
+            {features.map((feature) => {
+              const Icon = feature.icon;
+
+              return (
+                <article className="feature-card" key={feature.title}>
+                  <div className="feature-icon">
+                    <Icon size={20} strokeWidth={2} />
+                  </div>
+
+                  <h3>{feature.title}</h3>
+
+                  <p>{feature.description}</p>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
