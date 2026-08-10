@@ -1,12 +1,15 @@
-import { ArrowRight, Calculator, Command, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Calculator,
+  Command,
+  Sparkles,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
-    <main className="calculam-home">
-      <div className="home-glow home-glow-one" />
-      <div className="home-glow home-glow-two" />
-
+    <main className="home-page">
+      {/* Navigation */}
       <nav className="home-nav">
         <Link to="/" className="brand">
           <div className="brand-mark">
@@ -28,6 +31,7 @@ export default function Home() {
         </div>
       </nav>
 
+      {/* Hero */}
       <section className="hero-section">
         <div className="hero-badge">
           <Sparkles size={15} />
@@ -58,6 +62,7 @@ export default function Home() {
           </Link>
         </div>
 
+        {/* Workspace Preview */}
         <div className="hero-preview">
           <div className="preview-window">
             <div className="preview-topbar">
@@ -77,6 +82,7 @@ export default function Home() {
             </div>
 
             <div className="preview-content">
+              {/* Preview Sidebar */}
               <div className="preview-sidebar">
                 <div className="preview-sidebar-logo">
                   <Calculator size={16} />
@@ -95,10 +101,14 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Preview Main */}
               <div className="preview-main">
                 <div className="preview-heading">
                   <span>Good to see you.</span>
-                  <strong>What are we calculating?</strong>
+
+                  <strong>
+                    What are we calculating?
+                  </strong>
                 </div>
 
                 <div className="preview-cards">
