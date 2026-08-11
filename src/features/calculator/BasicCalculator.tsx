@@ -30,7 +30,13 @@ function calculate(
   }
 }
 
-export default function BasicCalculator() {
+type BasicCalculatorProps = {
+  onCalculation?: (expression: string, result: string) => void;
+};
+
+export default function BasicCalculator({
+  onCalculation,
+}: BasicCalculatorProps) {
   const [display, setDisplay] = useState("0");
   const [storedValue, setStoredValue] = useState<number | null>(
     null,
@@ -159,15 +165,22 @@ export default function BasicCalculator() {
           ? "÷"
           : operator;
 
-    setExpression(
-      `${storedValue.toLocaleString("en-IN")} ${symbol} ${inputValue.toLocaleString("en-IN")} =`,
-    );
+    const calculationExpression =
+      `${storedValue.toLocaleString("en-IN")} ${symbol} ${inputValue.toLocaleString("en-IN")} =`;
 
-    setDisplay(
-      Number.isFinite(result)
-        ? String(Number(result.toFixed(12)))
-        : "Error",
-    );
+    const calculationResult = Number.isFinite(result)
+      ? String(Number(result.toFixed(12)))
+      : "Error";
+
+    setExpression(calculationExpression);
+    setDisplay(calculationResult);
+
+    if (Number.isFinite(result)) {
+      onCalculation?.(
+        calculationExpression,
+        calculationResult,
+      );
+    }
 
     setStoredValue(null);
     setOperator(null);
