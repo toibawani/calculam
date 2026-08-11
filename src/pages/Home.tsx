@@ -1,10 +1,10 @@
 import {
+  ArrowDownUp,
   ArrowRight,
   Calculator,
   Command,
   History,
   Sparkles,
-  ArrowDownUp,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -29,13 +29,35 @@ const features = [
   },
 ];
 
+const previewKeys = [
+  "AC",
+  "⌫",
+  "%",
+  "÷",
+  "7",
+  "8",
+  "9",
+  "×",
+  "4",
+  "5",
+  "6",
+  "−",
+  "1",
+  "2",
+  "3",
+  "+",
+  "0",
+  ".",
+  "=",
+];
+
 export default function Home() {
   return (
     <div className="home-page">
       <nav className="home-nav">
         <Link to="/" className="brand">
           <span className="brand-mark">
-            <Calculator size={19} strokeWidth={2.4} />
+            <Calculator size={19} strokeWidth={2.2} />
           </span>
 
           <span className="brand-name">Calculam</span>
@@ -86,8 +108,6 @@ export default function Home() {
           </div>
 
           <div className="calculator-preview" aria-hidden="true">
-            <div className="preview-glow" />
-
             <div className="preview-window">
               <div className="preview-header">
                 <div className="window-controls">
@@ -105,7 +125,7 @@ export default function Home() {
               </div>
 
               <div className="preview-body">
-                <div className="preview-sidebar">
+                <aside className="preview-sidebar">
                   <div className="mini-logo">
                     <Calculator size={15} />
                   </div>
@@ -124,60 +144,43 @@ export default function Home() {
                     <History size={14} />
                     <span>History</span>
                   </div>
-                </div>
+                </aside>
 
                 <div className="preview-workspace">
                   <div className="preview-workspace-heading">
-                    <span>Basic Calculator</span>
-                    <small>Ready for input</small>
+                    <div>
+                      <span>Basic Calculator</span>
+                      <small>Ready for input</small>
+                    </div>
                   </div>
 
                   <div className="preview-display">
-                    <span className="preview-expression">
-                      248 × 4 + 16
-                    </span>
-
+                    <span className="preview-expression">248 × 4 + 16</span>
                     <strong>1,008</strong>
                   </div>
 
                   <div className="preview-keypad">
-                    {[
-                      "AC",
-                      "⌫",
-                      "%",
-                      "÷",
-                      "7",
-                      "8",
-                      "9",
-                      "×",
-                      "4",
-                      "5",
-                      "6",
-                      "−",
-                      "1",
-                      "2",
-                      "3",
-                      "+",
-                      "0",
-                      ".",
-                      "=",
-                    ].map((key) => (
-                      <span
-                        key={key}
-                        className={
-                          key === "="
-                            ? "preview-key equal"
-                            : key === "÷" ||
-                                key === "×" ||
-                                key === "−" ||
-                                key === "+"
-                              ? "preview-key operator"
-                              : "preview-key"
-                        }
-                      >
-                        {key}
-                      </span>
-                    ))}
+                    {previewKeys.map((key) => {
+                      const isOperator = ["÷", "×", "−", "+"].includes(key);
+                      const isEqual = key === "=";
+                      const isSecondary = ["AC", "⌫", "%"].includes(key);
+
+                      return (
+                        <span
+                          key={key}
+                          className={[
+                            "preview-key",
+                            isOperator ? "operator" : "",
+                            isEqual ? "equal" : "",
+                            isSecondary ? "secondary" : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                        >
+                          {key}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
