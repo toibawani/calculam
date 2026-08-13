@@ -7,24 +7,9 @@ import {
 import { Link } from "react-router-dom";
 
 import BasicCalculator from "../features/calculator/BasicCalculator";
-import HistoryPanel from "../features/history/HistoryPanel";
-import { useCalculationHistory } from "../features/history/useCalculationHistory";
+import UnitConverter from "../features/converter/UnitConverter";
 
 export default function Workspace() {
-  const {
-    history,
-    addCalculation,
-    removeCalculation,
-    clearHistory,
-  } = useCalculationHistory();
-
-  const handleCalculation = (
-    expression: string,
-    result: string,
-  ) => {
-    addCalculation(expression, result);
-  };
-
   return (
     <div className="workspace-page">
       <header className="workspace-header">
@@ -53,16 +38,6 @@ export default function Workspace() {
             className="icon-button"
             title="History"
             aria-label="History"
-            onClick={() => {
-              const panel = document.getElementById(
-                "calculation-history",
-              );
-
-              panel?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            }}
           >
             <History size={19} />
           </button>
@@ -95,25 +70,11 @@ export default function Workspace() {
           </p>
         </section>
 
-        <BasicCalculator
-          onCalculation={handleCalculation}
-        />
+        <div className="workspace-tools">
+          <BasicCalculator />
 
-        <section
-          id="calculation-history"
-          style={{
-            marginTop: "32px",
-          }}
-        >
-          <HistoryPanel
-            history={history}
-            onSelect={(expression) => {
-              console.log("Selected calculation:", expression);
-            }}
-            onRemove={removeCalculation}
-            onClear={clearHistory}
-          />
-        </section>
+          <UnitConverter />
+        </div>
       </main>
     </div>
   );
