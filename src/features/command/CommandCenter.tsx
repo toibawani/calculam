@@ -1,223 +1,153 @@
-import { useState } from "react";
-import {
-  ArrowRight,
-  Command,
-  Sparkles,
-} from "lucide-react";
+import { useMemo, useState } from "react";
 
-import {
-  executeCommand,
-  type CommandResult,
-} from "./commandEngine";
+type CommandCenterProps = {
+  onCalculation?: (expression: string, result: string) => void;
+};
 
-const examples = [
-  "15% of 840",
-  "sqrt 144",
-  "25 * 18",
-];
+function evaluateCommand(input: string): number {
+  const command = input.trim().toLowerCase();
 
-function CommandCenter() {
-  const [input, setInput] = useState("");
-  const [result, setResult] =
-    useState<CommandResult | null>(null);
+  if (!command) {
+    return NaN;
+  }
 
-  const runCommand = (value = input) => {
-    if (!value.trim()) {
+  const percentageMatch = command.match(
+    /^(-?\d+(?:\.\d+)?)%\s+of\s+(-?\d+(?:\.\d+)?)$/,
+  );
+
+  if (percentageMatch) {
+    const percentage = Number(percentageMatch[1]);
+    const value = Number(percentageMatch[2]);
+
+    return (percentage / 100) * value;
+  }
+
+  const sqrtMatch = command.match(
+    /^sqrt\s+(-?\d+(?:\.\d+)?)$/,
+  );
+
+  if (sqrtMatch) {
+    return Math.sqrt(Number(sqrtMatch[1]));
+  }
+
+  const arithmeticMatch = command.match(
+    /^(-?\d+(?:\.\d+)?)\s*([+\-*/])\s*(-?\d+(?:\.\d+)?)$/,
+  );
+
+  if (arithmeticMatch) {
+    const first = Number(arithmeticMatch[1]);
+    const operator = arithmeticMatch[2];
+    const second = Number(arithmeticMatch[3]);
+
+    switch (operator) {
+      case "+":
+        return first + second;
+      case "-":
+        return first - second;
+      case "*":
+        return first * second;
+      case "/":
+        return second === 0 ? NaN : first / second;
+    }
+  }
+
+  return NaN;
+}
+
+function formatResult(value: number): string {
+  if (!Number.isFinite(value)) {
+    return "No result";
+  }
+
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 10,
+  }).format(value);
+}
+
+export default function CommandCenter({
+  onCalculation,
+}: CommandCenterProps) {
+  const [command, setCommand] = useState("");
+
+  const result = useMemo(() => {
+    return evaluateCommand(command);
+  }, [command]);
+
+  const formattedResult = formatResult(result);
+
+  const handleCalculate = () => {
+    if (!Number.isFinite(result)) {
       return;
     }
 
-    setResult(executeCommand(value));
+    onCalculation?.(
+      command.trim(),
+      String(result),
+    );
   };
 
   return (
-    <section
-      style={{
-        width: "100%",
-        maxWidth: "760px",
-        margin: "0 auto",
-      }}
-    >
-      <div
-        style={{
-          marginBottom: "18px",
-          display: "flex",
-          alignItems: "center",
-          gap: "9px",
-          color: "#4F46E5",
-          fontSize: "0.78rem",
-          fontWeight: 700,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-        }}
-      >
-        <Sparkles size={16} />
-        Calculam Command
+    <section className="command-card">
+      <div className="command-header">
+        <div>
+          <span className="converter-eyebrow">
+            COMMAND CENTER
+          </span>
+
+          <h2>Calculate naturally</h2>
+        </div>
+
+        <span className="converter-result-label">
+          {formattedResult}
+        </span>
       </div>
 
-      <h2
-        style={{
-          margin: 0,
-          color: "#111827",
-          fontSize: "clamp(2rem, 5vw, 3.4rem)",
-          lineHeight: 1.05,
-          letterSpacing: "-0.045em",
-        }}
-      >
-        What do you want
-        <br />
-        to calculate?
-      </h2>
-
-      <p
-        style={{
-          marginTop: "16px",
-          maxWidth: "580px",
-          color: "#64748B",
-          lineHeight: 1.7,
-        }}
-      >
-        Type a calculation naturally. Calculam interprets
-        your command and finds the answer.
-      </p>
-
-      <div
-        style={{
-          marginTop: "30px",
-          padding: "8px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          border: "1px solid #CBD5E1",
-          borderRadius: "18px",
-          background: "#FFFFFF",
-          boxShadow:
-            "0 15px 40px rgba(15, 23, 42, 0.07)",
-        }}
-      >
-        <Command
-          size={20}
-          style={{
-            marginLeft: "12px",
-            flexShrink: 0,
-            color: "#94A3B8",
-          }}
-        />
-
+      <div className="command-input-row">
         <input
-          value={input}
-          onChange={(event) => {
-            setInput(event.target.value);
-            setResult(null);
-          }}
+          type="text"
+          value={command}
+          placeholder="Try 15% of 840"
+          onChange={(event) =>
+            setCommand(event.target.value)
+          }
           onKeyDown={(event) => {
             if (event.key === "Enter") {
-              runCommand();
+              handleCalculate();
             }
-          }}
-          placeholder="Try “15% of 840”"
-          aria-label="Calculation command"
-          style={{
-            minWidth: 0,
-            flex: 1,
-            border: "none",
-            outline: "none",
-            background: "transparent",
-            color: "#111827",
-            fontSize: "1rem",
-            padding: "12px 4px",
           }}
         />
 
         <button
           type="button"
-          onClick={() => runCommand()}
-          aria-label="Run calculation"
-          style={{
-            width: "46px",
-            height: "46px",
-            display: "grid",
-            placeItems: "center",
-            flexShrink: 0,
-            border: "none",
-            borderRadius: "13px",
-            background: "#4F46E5",
-            color: "#FFFFFF",
-            cursor: "pointer",
-          }}
+          onClick={handleCalculate}
+          disabled={!Number.isFinite(result)}
         >
-          <ArrowRight size={19} />
+          Calculate
         </button>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "8px",
-          marginTop: "14px",
-        }}
-      >
-        {examples.map((example) => (
-          <button
-            key={example}
-            type="button"
-            onClick={() => {
-              setInput(example);
-              runCommand(example);
-            }}
-            style={{
-              border: "1px solid #E2E8F0",
-              borderRadius: "999px",
-              padding: "8px 12px",
-              background: "#FFFFFF",
-              color: "#64748B",
-              cursor: "pointer",
-              fontSize: "0.78rem",
-            }}
-          >
-            {example}
-          </button>
-        ))}
-      </div>
-
-      {result && (
-        <div
-          style={{
-            marginTop: "22px",
-            padding: "24px",
-            borderRadius: "20px",
-            border: "1px solid #E2E8F0",
-            background: "#FFFFFF",
-          }}
+      <div className="command-examples">
+        <button
+          type="button"
+          onClick={() => setCommand("15% of 840")}
         >
-          <p
-            style={{
-              margin: 0,
-              color: "#94A3B8",
-              fontSize: "0.82rem",
-            }}
-          >
-            {result.explanation}
-          </p>
+          15% of 840
+        </button>
 
-          <p
-            style={{
-              margin: "8px 0 0",
-              color:
-                result.type === "unknown"
-                  ? "#DC2626"
-                  : "#111827",
-              fontSize: "clamp(2rem, 5vw, 3rem)",
-              fontWeight: 750,
-              letterSpacing: "-0.04em",
-            }}
-          >
-            {result.result}
-          </p>
-        </div>
-      )}
+        <button
+          type="button"
+          onClick={() => setCommand("sqrt 144")}
+        >
+          sqrt 144
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setCommand("25 * 18")}
+        >
+          25 * 18
+        </button>
+      </div>
     </section>
   );
 }
-
-export default CommandCenter;
