@@ -204,6 +204,11 @@ export default function UnitConverter() {
     setTo(nextUnits[1] ?? nextUnits[0]);
   };
 
+  const handleSwap = () => {
+    setFrom(to);
+    setTo(from);
+  };
+
   return (
     <section className="converter-card">
       <div className="converter-header">
@@ -267,12 +272,15 @@ export default function UnitConverter() {
           </select>
         </label>
 
-        <div
-          className="converter-arrow"
-          aria-hidden="true"
+        <button
+          type="button"
+          className="converter-swap"
+          onClick={handleSwap}
+          aria-label="Swap units"
+          title="Swap units"
         >
-          →
-        </div>
+          ⇄
+        </button>
 
         <label className="converter-field">
           <span>To</span>

@@ -765,10 +765,32 @@ a {
   overflow-x: auto;
 }
 
-.converter-arrow {
-  padding-bottom: 11px;
-  color: #999;
-  font-size: 1.1rem;
+.converter-swap {
+  width: 40px;
+  height: 40px;
+  align-self: end;
+  margin-bottom: 2px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #dededb;
+  border-radius: 11px;
+  background: #fff;
+  color: #666;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.converter-swap:hover {
+  color: var(--accent);
+  background: #fafaf9;
+  transform: rotate(180deg);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.06);
 }
 
 /* Responsive */
@@ -843,7 +865,7 @@ a {
     grid-template-columns: 1fr;
   }
 
-  .converter-arrow {
+  .converter-swap {
     display: none;
   }
 }
