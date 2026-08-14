@@ -4,7 +4,9 @@ export type UnitCategory =
   | "length"
   | "weight"
   | "temperature"
-  | "time";
+  | "time"
+  | "area"
+  | "volume";
 
 type UnitDefinition = {
   label: string;
@@ -121,6 +123,72 @@ export const units: Record<UnitCategory, UnitGroup> = {
       fromBase: (value) => value / 86400,
     },
   },
+
+  area: {
+    squareMeter: {
+      label: "Square meter",
+      toBase: (value) => value,
+      fromBase: (value) => value,
+    },
+    squareKilometer: {
+      label: "Square kilometer",
+      toBase: (value) => value * 1_000_000,
+      fromBase: (value) => value / 1_000_000,
+    },
+    squareCentimeter: {
+      label: "Square centimeter",
+      toBase: (value) => value / 10_000,
+      fromBase: (value) => value * 10_000,
+    },
+    squareFoot: {
+      label: "Square foot",
+      toBase: (value) => value * 0.09290304,
+      fromBase: (value) => value / 0.09290304,
+    },
+    squareInch: {
+      label: "Square inch",
+      toBase: (value) => value * 0.00064516,
+      fromBase: (value) => value / 0.00064516,
+    },
+    acre: {
+      label: "Acre",
+      toBase: (value) => value * 4046.8564224,
+      fromBase: (value) => value / 4046.8564224,
+    },
+  },
+
+  volume: {
+    liter: {
+      label: "Liter",
+      toBase: (value) => value,
+      fromBase: (value) => value,
+    },
+    milliliter: {
+      label: "Milliliter",
+      toBase: (value) => value / 1000,
+      fromBase: (value) => value * 1000,
+    },
+    cubicMeter: {
+      label: "Cubic meter",
+      toBase: (value) => value * 1000,
+      fromBase: (value) => value / 1000,
+    },
+    gallon: {
+      label: "US gallon",
+      toBase: (value) => value * 3.785411784,
+      fromBase: (value) => value / 3.785411784,
+    },
+    quart: {
+      label: "US quart",
+      toBase: (value) => value * 0.946352946,
+      fromBase: (value) => value / 0.946352946,
+    },
+    cup: {
+      label: "US cup",
+      toBase: (value) => value * 0.2365882365,
+      fromBase: (value) => value / 0.2365882365,
+    },
+  },
 };
 
 export function convertUnit(
@@ -162,6 +230,8 @@ const categoryLabels: Record<UnitCategory, string> = {
   weight: "Weight",
   temperature: "Temperature",
   time: "Time",
+  area: "Area",
+  volume: "Volume",
 };
 
 export default function UnitConverter() {
