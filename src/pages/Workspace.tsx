@@ -1,15 +1,27 @@
+import { useState } from "react";
 import {
   ArrowLeft,
   Calculator,
   History,
   RotateCcw,
+  X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import BasicCalculator from "../features/calculator/BasicCalculator";
 import UnitConverter from "../features/converter/UnitConverter";
+import HistoryPanel from "../features/history/HistoryPanel";
+import { useCalculationHistory } from "../features/history/useCalculationHistory";
 
 export default function Workspace() {
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  const {
+    history,
+    removeCalculation,
+    clearHistory,
+  } = useCalculationHistory();
+
   return (
     <div className="workspace-page">
       <header className="workspace-header">
@@ -38,6 +50,7 @@ export default function Workspace() {
             className="icon-button"
             title="History"
             aria-label="History"
+            onClick={() => setHistoryOpen(true)}
           >
             <History size={19} />
           </button>
@@ -76,6 +89,39 @@ export default function Workspace() {
           <UnitConverter />
         </div>
       </main>
+
+      {historyOpen && (
+        <div
+          className="history-overlay"
+          onClick={() => setHistoryOpen(false)}
+        >
+          <aside
+            className="history-drawer"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="history-drawer-header">
+              <h2>Calculation history</h2>
+
+              <button
+                type="button"
+                className="icon-button"
+                title="Close history"
+                aria-label="Close history"
+                onClick={() => setHistoryOpen(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <HistoryPanel
+              history={history}
+              onSelect={() => setHistoryOpen(false)}
+              onRemove={removeCalculation}
+              onClear={clearHistory}
+            />
+          </aside>
+        </div>
+      )}
     </div>
   );
 }
