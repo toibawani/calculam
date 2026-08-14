@@ -1,75 +1,38 @@
-# React + TypeScript + Vite
+# Calculam
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> A modern, keyboard-first calculation workspace — calculator, unit converter, natural-language commands, and persistent history in one focused UI.
 
-Currently, two official plugins are available:
+[![CI](https://github.com/toibawani/calculam/actions/workflows/ci.yml/badge.svg)](https://github.com/toibawani/calculam/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Basic Calculator** — everyday arithmetic with full keyboard support
+- **Unit Converter** — length, weight, temperature, and time with swap
+- **Command Center** — natural-language calculations such as `15% of 840`, `sqrt 144`, and `25 * 18`
+- **Calculation History** — persisted in localStorage and reusable with one click
+- **Dark Mode** — system-aware theme support
+- **Copy Result** — one-click result copying
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Layer | Technology |
+|-------|-----------|
+| UI | React 19, TypeScript |
+| Build | Vite 8 |
+| Routing | React Router 7 |
+| Icons | Lucide React |
+| Styling | Custom CSS design system |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+```bash
+git clone https://github.com/toibawani/calculam.git
+cd calculam
+npm install
+npm run dev
