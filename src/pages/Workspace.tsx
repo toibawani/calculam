@@ -18,6 +18,7 @@ export default function Workspace() {
 
   const {
     history,
+    addCalculation,
     removeCalculation,
     clearHistory,
   } = useCalculationHistory();
@@ -84,7 +85,9 @@ export default function Workspace() {
         </section>
 
         <div className="workspace-tools">
-          <BasicCalculator />
+          <BasicCalculator
+            onCalculation={addCalculation}
+          />
 
           <UnitConverter />
         </div>
