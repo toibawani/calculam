@@ -4,6 +4,12 @@ type CommandCenterProps = {
   onCalculation?: (expression: string, result: string) => void;
 };
 
+type ArithmeticOperator = "+" | "-" | "*" | "/";
+
+function parseNumber(value: string): number {
+  return Number(value.replace(/,/g, ""));
+}
+
 function evaluateCommand(input: string): number {
   const command = input.trim().toLowerCase();
 
@@ -11,41 +17,61 @@ function evaluateCommand(input: string): number {
     return NaN;
   }
 
+  // Percentage:
+  // "15% of 840"
   const percentageMatch = command.match(
-    /^(-?\d+(?:\.\d+)?)%\s+of\s+(-?\d+(?:\.\d+)?)$/,
+    /^(-?\d+(?:\.\d+)?)\s*%\s*of\s*(-?\d+(?:\.\d+)?)$/,
   );
 
   if (percentageMatch) {
-    const percentage = Number(percentageMatch[1]);
-    const value = Number(percentageMatch[2]);
+    const percentage = parseNumber(percentageMatch[1]);
+    const value = parseNumber(percentageMatch[2]);
 
     return (percentage / 100) * value;
   }
 
+  // Square root:
+  // "sqrt 144"
+  // "sqrt 2"
+  // "square root of 144"
   const sqrtMatch = command.match(
-    /^sqrt\s+(-?\d+(?:\.\d+)?)$/,
+    /^(?:sqrt|square\s+root(?:\s+of)?)\s+(-?\d+(?:\.\d+)?)$/,
   );
 
   if (sqrtMatch) {
-    return Math.sqrt(Number(sqrtMatch[1]));
+    const value = parseNumber(sqrtMatch[1]);
+
+    if (value < 0) {
+      return NaN;
+    }
+
+    return Math.sqrt(value);
   }
 
+  // Basic arithmetic:
+  // "25 + 18"
+  // "100 - 45"
+  // "12 * 8"
+  // "144 / 12"
   const arithmeticMatch = command.match(
     /^(-?\d+(?:\.\d+)?)\s*([+\-*/])\s*(-?\d+(?:\.\d+)?)$/,
   );
 
   if (arithmeticMatch) {
-    const first = Number(arithmeticMatch[1]);
-    const operator = arithmeticMatch[2];
-    const second = Number(arithmeticMatch[3]);
+    const first = parseNumber(arithmeticMatch[1]);
+    const operator = arithmeticMatch[2] as ArithmeticOperator;
+    const second = parseNumber(arithmeticMatch[3]);
 
     switch (operator) {
       case "+":
         return first + second;
+
       case "-":
         return first - second;
+
       case "*":
         return first * second;
+
       case "/":
         return second === 0 ? NaN : first / second;
     }
@@ -69,21 +95,30 @@ export default function CommandCenter({
 }: CommandCenterProps) {
   const [command, setCommand] = useState("");
 
-  const result = useMemo(() => {
-    return evaluateCommand(command);
-  }, [command]);
+  const result = useMemo(
+    () => evaluateCommand(command),
+    [command],
+  );
+
+  const isValid = Number.isFinite(result);
 
   const formattedResult = formatResult(result);
 
   const handleCalculate = () => {
-    if (!Number.isFinite(result)) {
+    const expression = command.trim();
+
+    if (!expression || !isValid) {
       return;
     }
 
     onCalculation?.(
-      command.trim(),
-      String(result),
+      expression,
+      String(Number(result.toFixed(12))),
     );
+  };
+
+  const handleExample = (example: string) => {
+    setCommand(example);
   };
 
   return (
@@ -107,6 +142,7 @@ export default function CommandCenter({
           type="text"
           value={command}
           placeholder="Try 15% of 840"
+          aria-label="Calculation command"
           onChange={(event) =>
             setCommand(event.target.value)
           }
@@ -120,7 +156,7 @@ export default function CommandCenter({
         <button
           type="button"
           onClick={handleCalculate}
-          disabled={!Number.isFinite(result)}
+          disabled={!isValid}
         >
           Calculate
         </button>
@@ -129,23 +165,32 @@ export default function CommandCenter({
       <div className="command-examples">
         <button
           type="button"
-          onClick={() => setCommand("15% of 840")}
+          onClick={() => handleExample("15% of 840")}
         >
           15% of 840
         </button>
 
         <button
           type="button"
-          onClick={() => setCommand("sqrt 144")}
+          onClick={() => handleExample("sqrt 144")}
         >
           sqrt 144
         </button>
 
         <button
           type="button"
-          onClick={() => setCommand("25 * 18")}
+          onClick={() => handleExample("25 * 18")}
         >
-          25 * 18
+          25 × 18
+        </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            handleExample("square root of 256")
+          }
+        >
+          √256
         </button>
       </div>
     </section>
