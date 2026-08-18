@@ -126,32 +126,27 @@ export const units: Record<UnitCategory, UnitGroup> = {
 
   area: {
     squareMeter: {
-      label: "Square Meter",
+      label: "Square meter",
       toBase: (value) => value,
       fromBase: (value) => value,
     },
     squareKilometer: {
-      label: "Square Kilometer",
+      label: "Square kilometer",
       toBase: (value) => value * 1_000_000,
       fromBase: (value) => value / 1_000_000,
     },
     squareCentimeter: {
-      label: "Square Centimeter",
+      label: "Square centimeter",
       toBase: (value) => value / 10_000,
       fromBase: (value) => value * 10_000,
     },
-    squareMillimeter: {
-      label: "Square Millimeter",
-      toBase: (value) => value / 1_000_000,
-      fromBase: (value) => value * 1_000_000,
-    },
     squareFoot: {
-      label: "Square Foot",
+      label: "Square foot",
       toBase: (value) => value * 0.09290304,
       fromBase: (value) => value / 0.09290304,
     },
     squareInch: {
-      label: "Square Inch",
+      label: "Square inch",
       toBase: (value) => value * 0.00064516,
       fromBase: (value) => value / 0.00064516,
     },
@@ -179,36 +174,54 @@ export const units: Record<UnitCategory, UnitGroup> = {
       fromBase: (value) => value * 1000,
     },
     cubicMeter: {
-      label: "Cubic Meter",
+      label: "Cubic meter",
       toBase: (value) => value * 1000,
       fromBase: (value) => value / 1000,
     },
     cubicCentimeter: {
-      label: "Cubic Centimeter",
+      label: "Cubic centimeter",
       toBase: (value) => value / 1000,
       fromBase: (value) => value * 1000,
     },
     gallon: {
-      label: "US Gallon",
+      label: "US gallon",
       toBase: (value) => value * 3.785411784,
       fromBase: (value) => value / 3.785411784,
     },
     quart: {
-      label: "US Quart",
+      label: "US quart",
       toBase: (value) => value * 0.946352946,
       fromBase: (value) => value / 0.946352946,
     },
     pint: {
-      label: "US Pint",
+      label: "US pint",
       toBase: (value) => value * 0.473176473,
       fromBase: (value) => value / 0.473176473,
     },
     cup: {
-      label: "US Cup",
+      label: "US cup",
       toBase: (value) => value * 0.2365882365,
       fromBase: (value) => value / 0.2365882365,
     },
   },
+};
+
+const categoryLabels: Record<UnitCategory, string> = {
+  length: "Length",
+  weight: "Weight",
+  temperature: "Temperature",
+  time: "Time",
+  area: "Area",
+  volume: "Volume",
+};
+
+const defaultUnits: Record<UnitCategory, [string, string]> = {
+  length: ["meter", "kilometer"],
+  weight: ["kilogram", "gram"],
+  temperature: ["celsius", "fahrenheit"],
+  time: ["second", "minute"],
+  area: ["squareMeter", "squareFoot"],
+  volume: ["liter", "milliliter"],
 };
 
 export function convertUnit(
@@ -241,18 +254,9 @@ export function formatConvertedValue(value: number): string {
   }
 
   return new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 6,
+    maximumFractionDigits: 8,
   }).format(value);
 }
-
-const categoryLabels: Record<UnitCategory, string> = {
-  length: "Length",
-  weight: "Weight",
-  temperature: "Temperature",
-  time: "Time",
-  area: "Area",
-  volume: "Volume",
-};
 
 export default function UnitConverter() {
   const [category, setCategory] =
@@ -288,13 +292,13 @@ export default function UnitConverter() {
   const handleCategoryChange = (
     nextCategory: UnitCategory,
   ) => {
-    const nextUnits = Object.keys(
-      units[nextCategory],
-    );
+    const [nextFrom, nextTo] =
+      defaultUnits[nextCategory];
 
     setCategory(nextCategory);
-    setFrom(nextUnits[0]);
-    setTo(nextUnits[1] ?? nextUnits[0]);
+    setFrom(nextFrom);
+    setTo(nextTo);
+    setValue("1");
   };
 
   const handleSwap = () => {
@@ -313,10 +317,9 @@ export default function UnitConverter() {
           <h2>Convert anything.</h2>
         </div>
 
-        <div className="converter-result">
-          <span>Result</span>
-          <strong>{formattedResult}</strong>
-        </div>
+        <span className="converter-result-label">
+          {formattedResult}
+        </span>
       </div>
 
       <div className="converter-categories">
