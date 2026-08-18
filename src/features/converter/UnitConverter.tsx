@@ -126,27 +126,32 @@ export const units: Record<UnitCategory, UnitGroup> = {
 
   area: {
     squareMeter: {
-      label: "Square meter",
+      label: "Square Meter",
       toBase: (value) => value,
       fromBase: (value) => value,
     },
     squareKilometer: {
-      label: "Square kilometer",
+      label: "Square Kilometer",
       toBase: (value) => value * 1_000_000,
       fromBase: (value) => value / 1_000_000,
     },
     squareCentimeter: {
-      label: "Square centimeter",
+      label: "Square Centimeter",
       toBase: (value) => value / 10_000,
       fromBase: (value) => value * 10_000,
     },
+    squareMillimeter: {
+      label: "Square Millimeter",
+      toBase: (value) => value / 1_000_000,
+      fromBase: (value) => value * 1_000_000,
+    },
     squareFoot: {
-      label: "Square foot",
+      label: "Square Foot",
       toBase: (value) => value * 0.09290304,
       fromBase: (value) => value / 0.09290304,
     },
     squareInch: {
-      label: "Square inch",
+      label: "Square Inch",
       toBase: (value) => value * 0.00064516,
       fromBase: (value) => value / 0.00064516,
     },
@@ -154,6 +159,11 @@ export const units: Record<UnitCategory, UnitGroup> = {
       label: "Acre",
       toBase: (value) => value * 4046.8564224,
       fromBase: (value) => value / 4046.8564224,
+    },
+    hectare: {
+      label: "Hectare",
+      toBase: (value) => value * 10_000,
+      fromBase: (value) => value / 10_000,
     },
   },
 
@@ -169,22 +179,32 @@ export const units: Record<UnitCategory, UnitGroup> = {
       fromBase: (value) => value * 1000,
     },
     cubicMeter: {
-      label: "Cubic meter",
+      label: "Cubic Meter",
       toBase: (value) => value * 1000,
       fromBase: (value) => value / 1000,
     },
+    cubicCentimeter: {
+      label: "Cubic Centimeter",
+      toBase: (value) => value / 1000,
+      fromBase: (value) => value * 1000,
+    },
     gallon: {
-      label: "US gallon",
+      label: "US Gallon",
       toBase: (value) => value * 3.785411784,
       fromBase: (value) => value / 3.785411784,
     },
     quart: {
-      label: "US quart",
+      label: "US Quart",
       toBase: (value) => value * 0.946352946,
       fromBase: (value) => value / 0.946352946,
     },
+    pint: {
+      label: "US Pint",
+      toBase: (value) => value * 0.473176473,
+      fromBase: (value) => value / 0.473176473,
+    },
     cup: {
-      label: "US cup",
+      label: "US Cup",
       toBase: (value) => value * 0.2365882365,
       fromBase: (value) => value / 0.2365882365,
     },
@@ -251,23 +271,26 @@ export default function UnitConverter() {
     const numericValue = Number(value);
 
     if (!Number.isFinite(numericValue)) {
-      return "—";
+      return NaN;
     }
 
-    return formatConvertedValue(
-      convertUnit(
-        numericValue,
-        category,
-        from,
-        to,
-      ),
+    return convertUnit(
+      numericValue,
+      category,
+      from,
+      to,
     );
   }, [value, category, from, to]);
+
+  const formattedResult =
+    formatConvertedValue(result);
 
   const handleCategoryChange = (
     nextCategory: UnitCategory,
   ) => {
-    const nextUnits = Object.keys(units[nextCategory]);
+    const nextUnits = Object.keys(
+      units[nextCategory],
+    );
 
     setCategory(nextCategory);
     setFrom(nextUnits[0]);
@@ -284,36 +307,37 @@ export default function UnitConverter() {
       <div className="converter-header">
         <div>
           <span className="converter-eyebrow">
-            CONVERTER
+            UNIT CONVERTER
           </span>
 
-          <h2>Unit converter</h2>
+          <h2>Convert anything.</h2>
         </div>
 
-        <span className="converter-result-label">
-          Result
-        </span>
+        <div className="converter-result">
+          <span>Result</span>
+          <strong>{formattedResult}</strong>
+        </div>
       </div>
 
       <div className="converter-categories">
-        {(Object.keys(categoryLabels) as UnitCategory[]).map(
-          (item) => (
-            <button
-              key={item}
-              type="button"
-              className={
-                category === item
-                  ? "converter-category active"
-                  : "converter-category"
-              }
-              onClick={() =>
-                handleCategoryChange(item)
-              }
-            >
-              {categoryLabels[item]}
-            </button>
-          ),
-        )}
+        {(
+          Object.keys(categoryLabels) as UnitCategory[]
+        ).map((item) => (
+          <button
+            key={item}
+            type="button"
+            className={
+              category === item
+                ? "converter-category active"
+                : "converter-category"
+            }
+            onClick={() =>
+              handleCategoryChange(item)
+            }
+          >
+            {categoryLabels[item]}
+          </button>
+        ))}
       </div>
 
       <div className="converter-fields">
@@ -335,7 +359,10 @@ export default function UnitConverter() {
             }
           >
             {unitNames.map((unit) => (
-              <option key={unit} value={unit}>
+              <option
+                key={unit}
+                value={unit}
+              >
                 {units[category][unit].label}
               </option>
             ))}
@@ -356,7 +383,7 @@ export default function UnitConverter() {
           <span>To</span>
 
           <div className="converter-output">
-            {result}
+            {formattedResult}
           </div>
 
           <select
@@ -366,7 +393,10 @@ export default function UnitConverter() {
             }
           >
             {unitNames.map((unit) => (
-              <option key={unit} value={unit}>
+              <option
+                key={unit}
+                value={unit}
+              >
                 {units[category][unit].label}
               </option>
             ))}
