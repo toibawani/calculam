@@ -4,10 +4,202 @@ type CommandCenterProps = {
   onCalculation?: (expression: string, result: string) => void;
 };
 
-type ArithmeticOperator = "+" | "-" | "*" | "/";
+type Token =
+  | { type: "number"; value: number }
+  | { type: "operator"; value: "+" | "-" | "*" | "/" | "^" }
+  | { type: "leftParen" }
+  | { type: "rightParen" };
 
-function parseNumber(value: string): number {
-  return Number(value.replace(/,/g, ""));
+function tokenize(input: string): Token[] {
+  const tokens: Token[] = [];
+  let index = 0;
+
+  while (index < input.length) {
+    const char = input[index];
+
+    if (/\s/.test(char)) {
+      index += 1;
+      continue;
+    }
+
+    if (/[0-9.]/.test(char)) {
+      let number = "";
+
+      while (
+        index < input.length &&
+        /[0-9.]/.test(input[index])
+      ) {
+        number += input[index];
+        index += 1;
+      }
+
+      const value = Number(number);
+
+      if (!Number.isFinite(value)) {
+        return [];
+      }
+
+      tokens.push({
+        type: "number",
+        value,
+      });
+
+      continue;
+    }
+
+    if ("+-*/^".includes(char)) {
+      tokens.push({
+        type: "operator",
+        value: char as "+" | "-" | "*" | "/" | "^",
+      });
+
+      index += 1;
+      continue;
+    }
+
+    if (char === "(") {
+      tokens.push({ type: "leftParen" });
+      index += 1;
+      continue;
+    }
+
+    if (char === ")") {
+      tokens.push({ type: "rightParen" });
+      index += 1;
+      continue;
+    }
+
+    return [];
+  }
+
+  return tokens;
+}
+
+function precedence(operator: string): number {
+  if (operator === "^") {
+    return 3;
+  }
+
+  if (operator === "*" || operator === "/") {
+    return 2;
+  }
+
+  return 1;
+}
+
+function applyOperator(
+  operator: string,
+  left: number,
+  right: number,
+): number {
+  switch (operator) {
+    case "+":
+      return left + right;
+
+    case "-":
+      return left - right;
+
+    case "*":
+      return left * right;
+
+    case "/":
+      return right === 0 ? NaN : left / right;
+
+    case "^":
+      return Math.pow(left, right);
+
+    default:
+      return NaN;
+  }
+}
+
+function evaluateArithmetic(input: string): number {
+  const tokens = tokenize(input);
+
+  if (tokens.length === 0) {
+    return NaN;
+  }
+
+  const values: number[] = [];
+  const operators: string[] = [];
+
+  const applyTopOperator = () => {
+    const operator = operators.pop();
+
+    if (!operator) {
+      return;
+    }
+
+    const right = values.pop();
+    const left = values.pop();
+
+    if (left === undefined || right === undefined) {
+      values.push(NaN);
+      return;
+    }
+
+    values.push(
+      applyOperator(operator, left, right),
+    );
+  };
+
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+
+    if (token.type === "number") {
+      values.push(token.value);
+      continue;
+    }
+
+    if (token.type === "leftParen") {
+      operators.push("(");
+      continue;
+    }
+
+    if (token.type === "rightParen") {
+      while (
+        operators.length > 0 &&
+        operators[operators.length - 1] !== "("
+      ) {
+        applyTopOperator();
+      }
+
+      if (
+        operators.length === 0 ||
+        operators.pop() !== "("
+      ) {
+        return NaN;
+      }
+
+      continue;
+    }
+
+    while (
+      operators.length > 0 &&
+      operators[operators.length - 1] !== "(" &&
+      precedence(
+        operators[operators.length - 1],
+      ) >= precedence(token.value)
+    ) {
+      applyTopOperator();
+    }
+
+    operators.push(token.value);
+  }
+
+  while (operators.length > 0) {
+    if (operators[operators.length - 1] === "(") {
+      return NaN;
+    }
+
+    applyTopOperator();
+  }
+
+  if (values.length !== 1) {
+    return NaN;
+  }
+
+  return values[0];
 }
 
 function evaluateCommand(input: string): number {
@@ -17,67 +209,28 @@ function evaluateCommand(input: string): number {
     return NaN;
   }
 
-  // Percentage:
-  // "15% of 840"
   const percentageMatch = command.match(
     /^(-?\d+(?:\.\d+)?)\s*%\s*of\s*(-?\d+(?:\.\d+)?)$/,
   );
 
   if (percentageMatch) {
-    const percentage = parseNumber(percentageMatch[1]);
-    const value = parseNumber(percentageMatch[2]);
+    const percentage = Number(percentageMatch[1]);
+    const value = Number(percentageMatch[2]);
 
     return (percentage / 100) * value;
   }
 
-  // Square root:
-  // "sqrt 144"
-  // "sqrt 2"
-  // "square root of 144"
   const sqrtMatch = command.match(
     /^(?:sqrt|square\s+root(?:\s+of)?)\s+(-?\d+(?:\.\d+)?)$/,
   );
 
   if (sqrtMatch) {
-    const value = parseNumber(sqrtMatch[1]);
+    const value = Number(sqrtMatch[1]);
 
-    if (value < 0) {
-      return NaN;
-    }
-
-    return Math.sqrt(value);
+    return value < 0 ? NaN : Math.sqrt(value);
   }
 
-  // Basic arithmetic:
-  // "25 + 18"
-  // "100 - 45"
-  // "12 * 8"
-  // "144 / 12"
-  const arithmeticMatch = command.match(
-    /^(-?\d+(?:\.\d+)?)\s*([+\-*/])\s*(-?\d+(?:\.\d+)?)$/,
-  );
-
-  if (arithmeticMatch) {
-    const first = parseNumber(arithmeticMatch[1]);
-    const operator = arithmeticMatch[2] as ArithmeticOperator;
-    const second = parseNumber(arithmeticMatch[3]);
-
-    switch (operator) {
-      case "+":
-        return first + second;
-
-      case "-":
-        return first - second;
-
-      case "*":
-        return first * second;
-
-      case "/":
-        return second === 0 ? NaN : first / second;
-    }
-  }
-
-  return NaN;
+  return evaluateArithmetic(command);
 }
 
 function formatResult(value: number): string {
@@ -102,8 +255,6 @@ export default function CommandCenter({
 
   const isValid = Number.isFinite(result);
 
-  const formattedResult = formatResult(result);
-
   const handleCalculate = () => {
     const expression = command.trim();
 
@@ -117,9 +268,13 @@ export default function CommandCenter({
     );
   };
 
-  const handleExample = (example: string) => {
-    setCommand(example);
-  };
+  const examples = [
+    "25 + 18 * 2",
+    "(25 + 18) * 2",
+    "2 ^ 10",
+    "15% of 840",
+    "sqrt 144",
+  ];
 
   return (
     <section className="command-card">
@@ -133,7 +288,7 @@ export default function CommandCenter({
         </div>
 
         <span className="converter-result-label">
-          {formattedResult}
+          {formatResult(result)}
         </span>
       </div>
 
@@ -141,7 +296,7 @@ export default function CommandCenter({
         <input
           type="text"
           value={command}
-          placeholder="Try 15% of 840"
+          placeholder="Try (25 + 18) * 2"
           aria-label="Calculation command"
           onChange={(event) =>
             setCommand(event.target.value)
@@ -163,35 +318,15 @@ export default function CommandCenter({
       </div>
 
       <div className="command-examples">
-        <button
-          type="button"
-          onClick={() => handleExample("15% of 840")}
-        >
-          15% of 840
-        </button>
-
-        <button
-          type="button"
-          onClick={() => handleExample("sqrt 144")}
-        >
-          sqrt 144
-        </button>
-
-        <button
-          type="button"
-          onClick={() => handleExample("25 * 18")}
-        >
-          25 × 18
-        </button>
-
-        <button
-          type="button"
-          onClick={() =>
-            handleExample("square root of 256")
-          }
-        >
-          √256
-        </button>
+        {examples.map((example) => (
+          <button
+            key={example}
+            type="button"
+            onClick={() => setCommand(example)}
+          >
+            {example}
+          </button>
+        ))}
       </div>
     </section>
   );
