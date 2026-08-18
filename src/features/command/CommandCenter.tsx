@@ -6,7 +6,10 @@ type CommandCenterProps = {
 
 type Token =
   | { type: "number"; value: number }
-  | { type: "operator"; value: "+" | "-" | "*" | "/" | "^" }
+  | {
+      type: "operator";
+      value: "+" | "-" | "*" | "/" | "^";
+    }
   | { type: "leftParen" }
   | { type: "rightParen" };
 
@@ -143,9 +146,7 @@ function evaluateArithmetic(input: string): number {
     );
   };
 
-  for (let index = 0; index < tokens.length; index += 1) {
-    const token = tokens[index];
-
+  for (const token of tokens) {
     if (token.type === "number") {
       values.push(token.value);
       continue;
@@ -254,6 +255,13 @@ export default function CommandCenter({
   );
 
   const isValid = Number.isFinite(result);
+  const hasInput = command.trim().length > 0;
+
+  const statusText = !hasInput
+    ? "Ready"
+    : isValid
+      ? "Valid command"
+      : "Try another command";
 
   const handleCalculate = () => {
     const expression = command.trim();
@@ -266,6 +274,22 @@ export default function CommandCenter({
       expression,
       String(Number(result.toFixed(12))),
     );
+  };
+
+  const handleClear = () => {
+    setCommand("");
+  };
+
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (event.key === "Enter") {
+      handleCalculate();
+    }
+
+    if (event.key === "Escape") {
+      handleClear();
+    }
   };
 
   const examples = [
@@ -293,20 +317,55 @@ export default function CommandCenter({
       </div>
 
       <div className="command-input-row">
-        <input
-          type="text"
-          value={command}
-          placeholder="Try (25 + 18) * 2"
-          aria-label="Calculation command"
-          onChange={(event) =>
-            setCommand(event.target.value)
-          }
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              handleCalculate();
-            }
+        <div
+          style={{
+            position: "relative",
+            flex: 1,
           }}
-        />
+        >
+          <input
+            type="text"
+            value={command}
+            placeholder="Try (25 + 18) * 2"
+            aria-label="Calculation command"
+            onChange={(event) =>
+              setCommand(event.target.value)
+            }
+            onKeyDown={handleKeyDown}
+            style={{
+              width: "100%",
+              paddingRight: hasInput
+                ? "42px"
+                : undefined,
+            }}
+          />
+
+          {hasInput && (
+            <button
+              type="button"
+              onClick={handleClear}
+              aria-label="Clear command"
+              title="Clear command"
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                width: "28px",
+                height: "28px",
+                border: "none",
+                borderRadius: "50%",
+                background: "#F1F5F9",
+                color: "#64748B",
+                cursor: "pointer",
+                fontSize: "16px",
+                lineHeight: 1,
+              }}
+            >
+              ×
+            </button>
+          )}
+        </div>
 
         <button
           type="button"
@@ -315,6 +374,19 @@ export default function CommandCenter({
         >
           Calculate
         </button>
+      </div>
+
+      <div
+        style={{
+          marginTop: "8px",
+          color: isValid
+            ? "#64748B"
+            : "#B45309",
+          fontSize: "0.75rem",
+        }}
+        aria-live="polite"
+      >
+        {statusText}
       </div>
 
       <div className="command-examples">
