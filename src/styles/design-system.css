@@ -167,9 +167,14 @@ body {
       transparent 1px
     ),
     radial-gradient(
-      ellipse at 20% 10%,
+      ellipse at 15% 5%,
       var(--accent-soft) 0%,
-      transparent 50%
+      transparent 40%
+    ),
+    radial-gradient(
+      ellipse at 85% 95%,
+      var(--gold-soft) 0%,
+      transparent 40%
     ),
     var(--bg);
 
@@ -177,7 +182,10 @@ body {
     var(--grid-size) var(--grid-size),
     var(--grid-size) var(--grid-size),
     100% 100%,
+    100% 100%,
     100% 100%;
+
+  background-attachment: fixed;
 
   color: var(--text);
 
@@ -316,6 +324,35 @@ button {
   outline-offset: 2px;
 }
 
+/* Focus styles for all interactive elements */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard users */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: var(--text-inverted);
+  text-decoration: none;
+  font-weight: 600;
+  z-index: 1000;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
 .button-primary {
   color: var(--text-inverted);
   background: var(--accent);
@@ -410,5 +447,13 @@ button {
     scroll-behavior: auto !important;
     transition: none !important;
     animation: none !important;
+  }
+
+  .calculator-value.animate {
+    animation: none;
+  }
+
+  .history-drawer {
+    animation: none;
   }
 }
