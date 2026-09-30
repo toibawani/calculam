@@ -112,7 +112,7 @@ function evaluateCommand(input: string): number {
 
 function formatResult(value: number): string {
   if (!Number.isFinite(value)) {
-    return "No result";
+    return "Calculam couldn't parse that yet.";
   }
 
   return new Intl.NumberFormat("en-US", {
@@ -190,6 +190,7 @@ export default function CommandCenter({
           type="button"
           onClick={handleCalculate}
           disabled={!Number.isFinite(result)}
+          aria-label="Calculate"
         >
           Calculate
         </button>
@@ -201,6 +202,7 @@ export default function CommandCenter({
             key={example}
             type="button"
             onClick={() => setCommand(example)}
+            aria-label={`Try: ${example}`}
           >
             {example}
           </button>

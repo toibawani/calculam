@@ -337,6 +337,7 @@ export default function UnitConverter() {
             onClick={() =>
               handleCategoryChange(item)
             }
+            aria-label={`Switch to ${categoryLabels[item]}`}
           >
             {categoryLabels[item]}
           </button>
@@ -353,6 +354,7 @@ export default function UnitConverter() {
             onChange={(event) =>
               setValue(event.target.value)
             }
+            aria-label="Value to convert"
           />
 
           <select
@@ -360,6 +362,7 @@ export default function UnitConverter() {
             onChange={(event) =>
               setFrom(event.target.value)
             }
+            aria-label="From unit"
           >
             {unitNames.map((unit) => (
               <option
@@ -394,6 +397,7 @@ export default function UnitConverter() {
             onChange={(event) =>
               setTo(event.target.value)
             }
+            aria-label="To unit"
           >
             {unitNames.map((unit) => (
               <option
