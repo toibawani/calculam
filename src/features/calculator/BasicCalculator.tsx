@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Delete,
   Divide,
@@ -285,20 +285,6 @@ export default function BasicCalculator({
       onClick={() => inputNumber(value)}
     >
       {value}
-    </button>
-  );
-
-  const operatorButton = (
-    value: Operator,
-    icon: ReactNode,
-  ) => (
-    <button
-      type="button"
-      className="calc-key calc-operator"
-      onClick={() => chooseOperator(value)}
-      aria-label={`operator ${value}`}
-    >
-      {icon}
     </button>
   );
 
