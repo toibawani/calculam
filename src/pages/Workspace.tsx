@@ -1,409 +1,96 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Calculator, History } from "lucide-react";
+import BasicCalculator from "../features/calculator/BasicCalculator";
+import UnitConverter from "../features/converter/UnitConverter";
+import CommandCenter from "../features/command/CommandCenter";
+import HistoryPanel from "../features/history/HistoryPanel";
+import { useCalculationHistory } from "../features/history/useCalculationHistory";
+import ThemeToggle from "../features/theme/ThemeToggle";
 
-type Operator = "+" | "-" | "*" | "/";
+export default function Workspace() {
+  const [showHistory, setShowHistory] = useState(false);
+  const {
+    history,
+    addCalculation,
+    removeCalculation,
+    clearHistory,
+  } = useCalculationHistory();
 
-type BasicCalculatorProps = {
-  onCalculation?: (expression: string, result: string) => void;
-};
-
-function calculate(
-  first: number,
-  operator: Operator,
-  second: number,
-): number {
-  switch (operator) {
-    case "+":
-      return first + second;
-
-    case "-":
-      return first - second;
-
-    case "*":
-      return first * second;
-
-    case "/":
-      return second === 0 ? NaN : first / second;
-  }
-}
-
-function formatResult(value: number): string {
-  if (!Number.isFinite(value)) {
-    return "Error";
-  }
-
-  return String(Number(value.toFixed(12)));
-}
-
-export default function BasicCalculator({
-  onCalculation,
-}: BasicCalculatorProps) {
-  const [display, setDisplay] = useState("0");
-  const [storedValue, setStoredValue] = useState<number | null>(null);
-  const [operator, setOperator] =
-    useState<Operator | null>(null);
-  const [waitingForOperand, setWaitingForOperand] =
-    useState(false);
-  const [expression, setExpression] = useState("");
-
-  const inputNumber = (number: string) => {
-    if (display === "Error") {
-      setDisplay(number);
-      setExpression("");
-      setWaitingForOperand(false);
-      return;
-    }
-
-    if (waitingForOperand) {
-      setDisplay(number);
-      setWaitingForOperand(false);
-      return;
-    }
-
-    setDisplay((current) =>
-      current === "0" ? number : current + number,
-    );
+  const handleCalculation = (expression: string, result: string) => {
+    addCalculation(expression, result);
   };
 
-  const inputDecimal = () => {
-    if (display === "Error") {
-      setDisplay("0.");
-      setExpression("");
-      setWaitingForOperand(false);
-      return;
-    }
-
-    if (waitingForOperand) {
-      setDisplay("0.");
-      setWaitingForOperand(false);
-      return;
-    }
-
-    if (!display.includes(".")) {
-      setDisplay((current) => `${current}.`);
-    }
+  const handleReuseCalculation = (expression: string) => {
+    // For now, just log - future enhancement could parse and reuse
+    console.log("Reuse:", expression);
   };
-
-  const clear = () => {
-    setDisplay("0");
-    setStoredValue(null);
-    setOperator(null);
-    setWaitingForOperand(false);
-    setExpression("");
-  };
-
-  const toggleSign = () => {
-    if (display === "0" || display === "Error") {
-      return;
-    }
-
-    setDisplay((current) =>
-      current.startsWith("-")
-        ? current.slice(1)
-        : `-${current}`,
-    );
-  };
-
-  const percentage = () => {
-    const value = Number(display);
-
-    if (!Number.isFinite(value)) {
-      return;
-    }
-
-    setDisplay(String(value / 100));
-  };
-
-  const chooseOperator = (nextOperator: Operator) => {
-    if (display === "Error") {
-      return;
-    }
-
-    const inputValue = Number(display);
-
-    if (!Number.isFinite(inputValue)) {
-      return;
-    }
-
-    if (
-      storedValue !== null &&
-      operator !== null &&
-      !waitingForOperand
-    ) {
-      const result = calculate(
-        storedValue,
-        operator,
-        inputValue,
-      );
-
-      if (!Number.isFinite(result)) {
-        setDisplay("Error");
-        setStoredValue(null);
-        setOperator(null);
-        setWaitingForOperand(true);
-        return;
-      }
-
-      setStoredValue(result);
-      setDisplay(formatResult(result));
-    } else {
-      setStoredValue(inputValue);
-    }
-
-    setOperator(nextOperator);
-    setWaitingForOperand(true);
-    setExpression(
-      `${inputValue.toLocaleString("en-IN")} ${nextOperator}`,
-    );
-  };
-
-  const equals = () => {
-    if (storedValue === null || operator === null) {
-      return;
-    }
-
-    const inputValue = Number(display);
-
-    if (!Number.isFinite(inputValue)) {
-      return;
-    }
-
-    const result = calculate(
-      storedValue,
-      operator,
-      inputValue,
-    );
-
-    const symbol =
-      operator === "*"
-        ? "×"
-        : operator === "/"
-          ? "÷"
-          : operator;
-
-    const calculationExpression =
-      `${storedValue.toLocaleString("en-IN")} ${symbol} ${inputValue.toLocaleString("en-IN")} =`;
-
-    const calculationResult = formatResult(result);
-
-    setExpression(calculationExpression);
-    setDisplay(calculationResult);
-
-    if (Number.isFinite(result)) {
-      onCalculation?.(
-        calculationExpression,
-        calculationResult,
-      );
-    }
-
-    setStoredValue(null);
-    setOperator(null);
-    setWaitingForOperand(true);
-  };
-
-  const handleKeyboard = (event: KeyboardEvent) => {
-    if (/^[0-9]$/.test(event.key)) {
-      inputNumber(event.key);
-      return;
-    }
-
-    if (event.key === ".") {
-      inputDecimal();
-      return;
-    }
-
-    if (
-      event.key === "+" ||
-      event.key === "-" ||
-      event.key === "*" ||
-      event.key === "/"
-    ) {
-      chooseOperator(event.key as Operator);
-      return;
-    }
-
-    if (event.key === "Enter" || event.key === "=") {
-      equals();
-      return;
-    }
-
-    if (event.key === "Escape") {
-      clear();
-      return;
-    }
-
-    if (event.key === "%") {
-      percentage();
-      return;
-    }
-
-    if (event.key === "Backspace") {
-      setDisplay((current) => {
-        if (current === "Error") {
-          return "0";
-        }
-
-        if (current.length <= 1) {
-          return "0";
-        }
-
-        return current.slice(0, -1);
-      });
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyboard);
-
-    return () => {
-      window.removeEventListener(
-        "keydown",
-        handleKeyboard,
-      );
-    };
-  });
 
   return (
-    <section className="calculator-card">
-      <div className="calculator-header">
-        <div>
-          <span className="eyebrow">CALCULATOR</span>
+    <div className="workspace-page">
+      <header className="workspace-header">
+        <div className="workspace-brand">
+          <div className="brand-icon">
+            <Calculator size={19} strokeWidth={2.2} />
+          </div>
 
-          <h2>Basic Calculator</h2>
+          <div>
+            <strong>Calculam</strong>
+            <span>Workspace</span>
+          </div>
         </div>
 
-        <button
-          type="button"
-          className="calculator-clear"
-          onClick={clear}
-        >
-          Clear
-        </button>
-      </div>
+        <div className="workspace-actions">
+          <button
+            type="button"
+            className="icon-button"
+            onClick={() => setShowHistory(!showHistory)}
+            aria-label="Toggle history"
+            title="Toggle history"
+          >
+            <History size={18} />
+          </button>
 
-      <div className="calculator-display">
-        <div className="calculator-expression">
-          {expression}
+          <ThemeToggle />
+        </div>
+      </header>
+
+      <main className="workspace-main">
+        <div className="workspace-intro">
+          <span className="eyebrow">CALCULATE</span>
+
+          <h1>
+            Your calculation
+            <br />
+            <span>workspace.</span>
+          </h1>
+
+          <p>
+            A focused space for calculations, conversions, and natural-language commands.
+          </p>
         </div>
 
-        <div className="calculator-value">
-          {display}
+        <div className="workspace-tools">
+          <div className="tool-primary">
+            <BasicCalculator onCalculation={handleCalculation} />
+          </div>
+
+          <div className="tool-secondary">
+            <UnitConverter />
+            <CommandCenter onCalculation={handleCalculation} />
+          </div>
         </div>
-      </div>
+      </main>
 
-      <div className="calculator-keypad">
-        <button
-          type="button"
-          className="calculator-key utility"
-          onClick={clear}
-        >
-          AC
-        </button>
-
-        <button
-          type="button"
-          className="calculator-key utility"
-          onClick={toggleSign}
-        >
-          ±
-        </button>
-
-        <button
-          type="button"
-          className="calculator-key utility"
-          onClick={percentage}
-        >
-          %
-        </button>
-
-        <button
-          type="button"
-          className="calculator-key operator"
-          onClick={() => chooseOperator("/")}
-        >
-          ÷
-        </button>
-
-        {["7", "8", "9"].map((number) => (
-          <button
-            key={number}
-            type="button"
-            className="calculator-key"
-            onClick={() => inputNumber(number)}
-          >
-            {number}
-          </button>
-        ))}
-
-        <button
-          type="button"
-          className="calculator-key operator"
-          onClick={() => chooseOperator("*")}
-        >
-          ×
-        </button>
-
-        {["4", "5", "6"].map((number) => (
-          <button
-            key={number}
-            type="button"
-            className="calculator-key"
-            onClick={() => inputNumber(number)}
-          >
-            {number}
-          </button>
-        ))}
-
-        <button
-          type="button"
-          className="calculator-key operator"
-          onClick={() => chooseOperator("-")}
-        >
-          −
-        </button>
-
-        {["1", "2", "3"].map((number) => (
-          <button
-            key={number}
-            type="button"
-            className="calculator-key"
-            onClick={() => inputNumber(number)}
-          >
-            {number}
-          </button>
-        ))}
-
-        <button
-          type="button"
-          className="calculator-key operator"
-          onClick={() => chooseOperator("+")}
-        >
-          +
-        </button>
-
-        <button
-          type="button"
-          className="calculator-key zero"
-          onClick={() => inputNumber("0")}
-        >
-          0
-        </button>
-
-        <button
-          type="button"
-          className="calculator-key"
-          onClick={inputDecimal}
-        >
-          .
-        </button>
-
-        <button
-          type="button"
-          className="calculator-key equals"
-          onClick={equals}
-        >
-          =
-        </button>
-      </div>
-    </section>
+      {showHistory && (
+        <div className="history-drawer">
+          <HistoryPanel
+            history={history}
+            onSelect={handleReuseCalculation}
+            onRemove={removeCalculation}
+            onClear={clearHistory}
+          />
+        </div>
+      )}
+    </div>
   );
 }
