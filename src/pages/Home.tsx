@@ -190,7 +190,7 @@ export default function Home() {
 
         <section className="feature-section">
           <div className="section-heading">
-            <span>Everything in one place</span>
+            <span className="eyebrow">FEATURES</span>
             <h2>A workspace that stays out of your way.</h2>
           </div>
 
