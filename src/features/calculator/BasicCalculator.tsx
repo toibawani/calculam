@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Delete,
   Divide,
@@ -46,6 +46,7 @@ export default function BasicCalculator({
   const [waitingForOperand, setWaitingForOperand] =
     useState(false);
   const [expression, setExpression] = useState("");
+  const displayRef = useRef<HTMLDivElement>(null);
 
   const inputNumber = (number: string) => {
     if (display === "Error") {
@@ -266,6 +267,14 @@ export default function BasicCalculator({
     };
   });
 
+  useEffect(() => {
+    if (displayRef.current) {
+      displayRef.current.classList.remove("animate");
+      void displayRef.current.offsetWidth; // Trigger reflow
+      displayRef.current.classList.add("animate");
+    }
+  }, [display]);
+
   const numberButton = (
     value: string,
     className = "",
@@ -294,12 +303,10 @@ export default function BasicCalculator({
   );
 
   return (
-    <section className="basic-calculator">
+    <section className="calculator-card">
       <div className="calculator-header">
         <div>
-          <span className="calculator-eyebrow">
-            BASIC
-          </span>
+          <span className="eyebrow">BASIC</span>
 
           <h2>Calculator</h2>
         </div>
@@ -308,6 +315,7 @@ export default function BasicCalculator({
           type="button"
           className="calculator-clear"
           onClick={clear}
+          aria-label="Clear calculator"
         >
           Clear
         </button>
@@ -319,6 +327,7 @@ export default function BasicCalculator({
         </div>
 
         <div
+          ref={displayRef}
           className={`calculator-value ${
             display.length > 12
               ? "calculator-value-small"
@@ -332,32 +341,36 @@ export default function BasicCalculator({
       <div className="calculator-keypad">
         <button
           type="button"
-          className="calc-key calc-function"
+          className="calculator-key utility"
           onClick={clear}
+          aria-label="All clear"
         >
           AC
         </button>
 
         <button
           type="button"
-          className="calc-key calc-function"
+          className="calculator-key utility"
           onClick={toggleSign}
+          aria-label="Toggle sign"
         >
           ±
         </button>
 
         <button
           type="button"
-          className="calc-key calc-function"
+          className="calculator-key utility"
           onClick={percentage}
+          aria-label="Percentage"
         >
           %
         </button>
 
         <button
           type="button"
-          className="calc-key calc-operator"
+          className="calculator-key operator"
           onClick={() => chooseOperator("/")}
+          aria-label="Divide"
         >
           <Divide size={21} strokeWidth={2.3} />
         </button>
@@ -366,48 +379,62 @@ export default function BasicCalculator({
         {numberButton("8")}
         {numberButton("9")}
 
-        {operatorButton(
-          "*",
-          <X size={21} strokeWidth={2.3} />,
-        )}
+        <button
+          type="button"
+          className="calculator-key operator"
+          onClick={() => chooseOperator("*")}
+          aria-label="Multiply"
+        >
+          <X size={21} strokeWidth={2.3} />
+        </button>
 
         {numberButton("4")}
         {numberButton("5")}
         {numberButton("6")}
 
-        {operatorButton(
-          "-",
-          <Minus size={21} strokeWidth={2.3} />,
-        )}
+        <button
+          type="button"
+          className="calculator-key operator"
+          onClick={() => chooseOperator("-")}
+          aria-label="Subtract"
+        >
+          <Minus size={21} strokeWidth={2.3} />
+        </button>
 
         {numberButton("1")}
         {numberButton("2")}
         {numberButton("3")}
 
-        {operatorButton(
-          "+",
-          <Plus size={21} strokeWidth={2.3} />,
-        )}
+        <button
+          type="button"
+          className="calculator-key operator"
+          onClick={() => chooseOperator("+")}
+          aria-label="Add"
+        >
+          <Plus size={21} strokeWidth={2.3} />
+        </button>
 
         <button
           type="button"
-          className="calc-key calc-number"
+          className="calculator-key"
           onClick={() => inputNumber("0")}
+          aria-label="0"
         >
           0
         </button>
 
         <button
           type="button"
-          className="calc-key calc-number"
+          className="calculator-key"
           onClick={inputDecimal}
+          aria-label="Decimal point"
         >
           .
         </button>
 
         <button
           type="button"
-          className="calc-key calc-function"
+          className="calculator-key utility"
           onClick={backspace}
           aria-label="Backspace"
         >
@@ -416,8 +443,9 @@ export default function BasicCalculator({
 
         <button
           type="button"
-          className="calc-key calc-equals"
+          className="calculator-key equals"
           onClick={equals}
+          aria-label="Equals"
         >
           <Equal
             size={22}
