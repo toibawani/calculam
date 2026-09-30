@@ -234,6 +234,18 @@ a {
   width: min(100%, 980px);
   margin: 42px auto 0;
   padding-bottom: 10px;
+  animation: fadeInUp 600ms ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .preview-window {
