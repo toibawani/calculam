@@ -54,7 +54,7 @@ export default function Workspace() {
         </div>
       </header>
 
-      <main className="workspace-main">
+      <main className="workspace-main" id="main-content">
         <div className="workspace-intro">
           <span className="eyebrow">CALCULATE</span>
 

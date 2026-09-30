@@ -5,19 +5,25 @@ import Workspace from "./pages/Workspace";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
+    <>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
 
-      <Route
-        path="/workspace"
-        element={<Workspace />}
-      />
+      <Routes>
+        <Route path="/" element={<Home />} />
 
-      <Route
-        path="*"
-        element={<Navigate to="/" replace />}
-      />
-    </Routes>
+        <Route
+          path="/workspace"
+          element={<Workspace />}
+        />
+
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+      </Routes>
+    </>
   );
 }
 

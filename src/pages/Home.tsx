@@ -75,7 +75,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <main>
+      <main id="main-content">
         <section className="hero-section">
           <div className="hero-copy">
             <div className="hero-badge">
